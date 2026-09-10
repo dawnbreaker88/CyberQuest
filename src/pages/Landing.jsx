@@ -9,7 +9,7 @@ import QuestCategories from '../components/landing/QuestCategories';
 import GameplayPreview from '../components/landing/GameplayPreview';
 import ProgressionPreview from '../components/landing/ProgressionPreview';
 import PhilosophySection from '../components/landing/PhilosophySection';
-import FinalCTA from '../components/landing/FinalCTA';
+import FinalCTA from '../components/landing/FinalCta';
 import Footer from '../components/landing/Footer';
 
 export default function Landing() {
