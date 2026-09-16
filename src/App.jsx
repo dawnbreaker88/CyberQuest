@@ -11,7 +11,7 @@ import OnboardingResult from './pages/OnboardingResult';
 import Roadmap from './pages/Roadmap';
 import Profile from './pages/Profile';
 import Play from './pages/Play';
-import GamePlaceholder from './pages/GamePlaceholder';
+import GamePage from './pages/GamePage';
 
 function App() {
   return (
@@ -80,7 +80,7 @@ function App() {
             path="/app/game/:questId"
             element={
               <ProtectedRoute>
-                <GamePlaceholder />
+                <GamePage />
               </ProtectedRoute>
             }
           />

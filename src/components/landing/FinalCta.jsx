@@ -44,19 +44,7 @@ export default function FinalCTA({ onStartQuest }) {
         </p>
 
         {/* Key Feature Pills */}
-        <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-[#6F7B8A]">
-          <span className="flex items-center gap-1.5 text-[#73D6B1]">
-            <CheckCircle2 className="w-3.5 h-3.5" /> No credit card required
-          </span>
-          <span>•</span>
-          <span className="flex items-center gap-1.5 text-[#FFB84D]">
-            <CheckCircle2 className="w-3.5 h-3.5" /> 5 Threat Categories
-          </span>
-          <span>•</span>
-          <span className="flex items-center gap-1.5 text-[#39C6E8]">
-            <CheckCircle2 className="w-3.5 h-3.5" /> Instant Assessment
-          </span>
-        </div>
+      
 
         {/* Action Button */}
         <div className="pt-4">
