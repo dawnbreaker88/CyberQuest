@@ -11,7 +11,7 @@ const playCategories = [
     color: '#39C6E8',
     icon: Shield,
     route: '/app/game/phishing',
-    challenges: '5 scenarios',
+    challenges: '10 scenarios',
     xpReward: '+150 XP',
   },
   {
@@ -21,7 +21,7 @@ const playCategories = [
     color: '#73D6B1',
     icon: Key,
     route: '/app/game/passwords',
-    challenges: '5 scenarios',
+    challenges: '10 scenarios',
     xpReward: '+200 XP',
   },
   {
@@ -31,7 +31,7 @@ const playCategories = [
     color: '#FFB84D',
     icon: QrCode,
     route: '/app/game/qr',
-    challenges: '5 scenarios',
+    challenges: '10 scenarios',
     xpReward: '+200 XP',
   },
   {
@@ -41,7 +41,7 @@ const playCategories = [
     color: '#FF7468',
     icon: AlertTriangle,
     route: '/app/game/scams',
-    challenges: '5 scenarios',
+    challenges: '10 scenarios',
     xpReward: '+250 XP',
   },
   {
@@ -51,7 +51,7 @@ const playCategories = [
     color: '#9D91E8',
     icon: UserCheck,
     route: '/app/game/social-engineering',
-    challenges: '5 scenarios',
+    challenges: '10 scenarios',
     xpReward: '+300 XP',
   },
 ];

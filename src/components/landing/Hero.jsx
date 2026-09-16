@@ -36,23 +36,17 @@ export default function Hero({ onStartQuest, onSeeHowItWorks }) {
       <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center space-y-6">
         
         {/* Brand System Tag */}
-        <div
-          ref={tagRef}
-          className="inline-flex items-center gap-2 rounded-full border border-[#273347] bg-[#131925] px-4 py-1.5 text-xs font-mono font-bold tracking-widest text-[#39C6E8] uppercase shadow-sm"
-        >
-          <Shield className="w-3.5 h-3.5 text-[#39C6E8]" />
-          <span>CYBERQUEST // GAMIFIED CYBERSECURITY</span>
-        </div>
-
+      
         {/* Headline */}
         <div ref={headlineRef} className="space-y-1">
-          <span className="block text-2xl sm:text-3xl font-mono font-bold text-[#AAB3C0] tracking-wider uppercase">
-            THINK. CLICK. SURVIVE.
-          </span>
+        
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-[#F4F6F8] leading-[1.0] uppercase">
-            BE HARDER <span className="text-[#39C6E8]">TO FOOL.</span>
+            CYBER<span className="text-[#39C6E8]">QUEST</span>
           </h1>
         </div>
+          <span className="block text-2xl sm:text-3xl font-mono font-bold text-[#AAB3C0] tracking-wider uppercase">
+            BE HARDER TO FOOL
+          </span>
 
         {/* Punchy Supporting Copy */}
         <p
@@ -72,13 +66,7 @@ export default function Hero({ onStartQuest, onSeeHowItWorks }) {
               onError={(e) => { e.target.style.display = 'none'; }}
             />
           </div>
-          <div className="flex items-center gap-3 text-xs font-mono text-[#6F7B8A] mt-3">
-            <span className="text-[#39C6E8] font-bold">CYBER OPERATIVE</span>
-            <span>•</span>
-            <span className="text-[#F4F6F8]">FIELD READY</span>
-            <span>•</span>
-            <span className="text-[#73D6B1]">5 THREAT TRACKS</span>
-          </div>
+         
         </div>
 
         {/* Actions */}
