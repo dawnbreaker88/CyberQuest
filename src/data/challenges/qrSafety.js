@@ -43,21 +43,31 @@ export const qrSafetyChallenges = [
       ],
       availableActions: [
         {
+          id: "act_ignore_menu",
+          label: "Avoid Digital Menus Completely; Demand Physical Paper Menu Everywhere",
+          evaluationKey: "avoid_all_qr",
+        },
+        {
           id: "act_view_menu",
-          label: "Open Menu URL in Browser",
-          variant: "primary",
+          label: "Verify Decoded URL Hostname and Open Official Cafe Menu in Browser",
           evaluationKey: "open_legit_menu",
         },
         {
+          id: "act_download_rewards_app",
+          label: "Click Promotional Banner on Menu Page to Sideload 'CafeRewards.apk'",
+          evaluationKey: "download_unverified_apk",
+        },
+        {
           id: "act_report_safe_qr",
-          label: "Report Menu as Malicious Quishing to Police",
-          variant: "secondary",
+          label: "Report Table Stand to Cyber Crime Police as Dangerous Quishing",
           evaluationKey: "false_alarm_report",
         },
       ],
     },
     evaluation: {
       open_legit_menu: { outcome: "correct", score: 100, xp: 100, lifeLost: false, key: "open_legit_menu" },
+      avoid_all_qr: { outcome: "partial", score: 40, xp: 40, lifeLost: false, key: "avoid_all_qr" },
+      download_unverified_apk: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "download_unverified_apk" },
       false_alarm_report: { outcome: "partial", score: 40, xp: 40, lifeLost: false, key: "false_alarm_report" },
     },
     feedback: {
@@ -72,12 +82,28 @@ export const qrSafetyChallenges = [
           "Confirmed authentic direct print without tampering",
         ],
       },
+      avoid_all_qr: {
+        title: "Overly Cautious Rejection",
+        outcome: "partial",
+        explanation:
+          "While caution is healthy, outright refusal of digital services creates friction. Cyber awareness means verifying authenticity rather than unconditional avoidance.",
+        rule: "Inspect the decoded destination and physical context instead of blanket avoidance.",
+        cluesUncovered: ["Avoided benign digital menu"],
+      },
+      download_unverified_apk: {
+        title: "Unvetted APK Sideloaded!",
+        outcome: "wrong",
+        explanation:
+          "You tapped a promotional banner and downloaded an Android application package (.apk) from an unverified web source, putting your device at risk.",
+        rule: "Never download or install application packages from web pages opened via QR codes.",
+        cluesUncovered: ["Attempted APK download from unverified link"],
+      },
       false_alarm_report: {
         title: "False Alarm (Partial)",
         outcome: "partial",
         explanation:
-          "This was a legitimate cafe menu. The goal of cybersecurity is discerning genuine interactions from threats, not blocking normal digital services.",
-        rule: "Evaluate context and domain validity rather than rejecting all QR codes unconditionally.",
+          "This was a legitimate cafe menu. The goal of cybersecurity is discerning genuine interactions from threats, not filing false reports.",
+        rule: "Evaluate context and domain validity rather than reporting all QR codes unconditionally.",
         cluesUncovered: ["Over-cautious false positive on benign menu"],
       },
     },
@@ -120,22 +146,32 @@ export const qrSafetyChallenges = [
       ],
       availableActions: [
         {
+          id: "act_pay_sticker",
+          label: "Scan & Pay Parking Fee on Decoded Link Because Municipal Emblem is Printed on Sticker",
+          evaluationKey: "pay_quishing_sticker",
+        },
+        {
+          id: "act_enter_vehicle_test",
+          label: "Enter Vehicle License Plate on Scanned Page to Check if Meter Has Your Record",
+          evaluationKey: "enter_license_plate_trap",
+        },
+        {
           id: "act_alert_parking_warden",
-          label: "Do Not Scan; Alert Parking Attendant to Fraudulent Sticker Overlay",
-          variant: "primary",
+          label: "Do Not Scan Sticker; Pay via City's Official Municipal App or Alert Parking Warden",
           evaluationKey: "report_sticker_overlay",
         },
         {
-          id: "act_pay_sticker",
-          label: "Scan & Pay Parking Fee on the Decoded Link",
-          variant: "danger",
-          evaluationKey: "pay_quishing_sticker",
+          id: "act_peel_and_pay",
+          label: "Peel the Sticker Off and Scan the Scratched Surface Underneath Without Informing Anyone",
+          evaluationKey: "peel_and_pay_unreported",
         },
       ],
     },
     evaluation: {
       report_sticker_overlay: { outcome: "correct", score: 100, xp: 110, lifeLost: false, key: "report_sticker_overlay" },
       pay_quishing_sticker: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "pay_quishing_sticker" },
+      enter_license_plate_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "enter_license_plate_trap" },
+      peel_and_pay_unreported: { outcome: "partial", score: 50, xp: 50, lifeLost: false, key: "peel_and_pay_unreported" },
     },
     feedback: {
       report_sticker_overlay: {
@@ -156,6 +192,22 @@ export const qrSafetyChallenges = [
           "You paid the criminal's virtual wallet and gave them your credit card details, while your vehicle remains unpaid and liable for towing.",
         rule: "Never scan stickers casually slapped onto public infrastructure.",
         cluesUncovered: ["Fell for public sticker overlay quishing"],
+      },
+      enter_license_plate_trap: {
+        title: "Personal Data Collected by Phishers!",
+        outcome: "wrong",
+        explanation:
+          "Entering vehicle details into unverified third-party pages links your phone number and license plate to aggressive phishing databases.",
+        rule: "Never submit personal information on untrusted portals.",
+        cluesUncovered: ["Entered vehicle data into fraudulent portal"],
+      },
+      peel_and_pay_unreported: {
+        title: "Partial Action (Unreported Danger)",
+        outcome: "partial",
+        explanation:
+          "Peeling the sticker helped you find the original code, but failing to report it to attendants leaves other drivers vulnerable to replaced stickers.",
+        rule: "Always notify facility staff when physical tampering is discovered.",
+        cluesUncovered: ["Identified sticker but failed to alert authorities"],
       },
     },
   },
@@ -198,21 +250,31 @@ export const qrSafetyChallenges = [
       availableActions: [
         {
           id: "act_refuse_swag",
-          label: "Decline to Scan; Report Rogue Standee to Conference Organizers",
-          variant: "primary",
+          label: "Decline to Authorize OAuth; Verify Promotion Directly with Official Conference Desk",
           evaluationKey: "refuse_swag_quishing",
         },
         {
           id: "act_scan_oauth",
-          label: "Scan QR & Authorize Google OAuth Access to Claim T-Shirt",
-          variant: "danger",
+          label: "Scan QR & Authorize Google OAuth Access to Claim Free Developer T-Shirt",
           evaluationKey: "authorize_oauth_trap",
+        },
+        {
+          id: "act_create_burner_auth",
+          label: "Grant Read/Write Permissions Because the Login Page Shows an HTTPS SSL Lock",
+          evaluationKey: "trust_ssl_oauth_trap",
+        },
+        {
+          id: "act_share_booth_pass",
+          label: "Take a Photo of the QR and Share in Developer Group to Let Colleagues Claim Swag",
+          evaluationKey: "spread_swag_trap",
         },
       ],
     },
     evaluation: {
       refuse_swag_quishing: { outcome: "correct", score: 100, xp: 120, lifeLost: false, key: "refuse_swag_quishing" },
       authorize_oauth_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "authorize_oauth_trap" },
+      trust_ssl_oauth_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "trust_ssl_oauth_trap" },
+      spread_swag_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "spread_swag_trap" },
     },
     feedback: {
       refuse_swag_quishing: {
@@ -233,6 +295,22 @@ export const qrSafetyChallenges = [
           "The rogue app requested 'Read/Write access to Gmail and Google Drive'. The attacker gained persistent API access to your company files.",
         rule: "Treat OAuth consent prompts with extreme scrutiny.",
         cluesUncovered: ["Surrendered cloud token for fake t-shirt"],
+      },
+      trust_ssl_oauth_trap: {
+        title: "Fell for SSL Lock Illusion!",
+        outcome: "wrong",
+        explanation:
+          "HTTPS only encrypts connection traffic; it does not guarantee that the receiver is trustworthy or that requested OAuth scopes are safe.",
+        rule: "SSL encryption does not mean the application or OAuth request is legitimate.",
+        cluesUncovered: ["Relied on HTTPS lock for application trust"],
+      },
+      spread_swag_trap: {
+        title: "Spread Phishing Lure to Teammates!",
+        outcome: "wrong",
+        explanation:
+          "Sharing unvetted swag QR codes in developer groups exposes colleagues to credential and token harvesting.",
+        rule: "Never amplify unverified promotions in team channels.",
+        cluesUncovered: ["Shared malicious OAuth lure with teammates"],
       },
     },
   },
@@ -269,22 +347,32 @@ export const qrSafetyChallenges = [
       ],
       availableActions: [
         {
+          id: "act_follow_redirect",
+          label: "Trust Initial Domain 'electricity-board.gov-service.test' and Enter NetBanking PIN on Landing Page",
+          evaluationKey: "follow_open_redirect",
+        },
+        {
+          id: "act_enter_consumer_no",
+          label: "Enter Consumer Account Number on Redirected Page to Check Balance Before Paying",
+          evaluationKey: "submit_consumer_data",
+        },
+        {
           id: "act_pay_official_app",
-          label: "Discard QR; Pay Directly via Official Discom App / Electricity Board Portal",
-          variant: "primary",
+          label: "Discard QR Flyer; Pay Bill Directly via Official Discom App / Electricity Board Portal",
           evaluationKey: "pay_direct_app",
         },
         {
-          id: "act_follow_redirect",
-          label: "Trust the First Domain Name and Enter NetBanking PIN on the Redirected Page",
-          variant: "danger",
-          evaluationKey: "follow_open_redirect",
+          id: "act_forward_qr",
+          label: "Forward QR Image to Apartment Community Group to See if Neighbors Received It",
+          evaluationKey: "forward_suspicious_bill",
         },
       ],
     },
     evaluation: {
       pay_direct_app: { outcome: "correct", score: 100, xp: 130, lifeLost: false, key: "pay_direct_app" },
       follow_open_redirect: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "follow_open_redirect" },
+      submit_consumer_data: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "submit_consumer_data" },
+      forward_suspicious_bill: { outcome: "partial", score: 40, xp: 40, lifeLost: false, key: "forward_suspicious_bill" },
     },
     feedback: {
       pay_direct_app: {
@@ -305,6 +393,22 @@ export const qrSafetyChallenges = [
           "You looked only at the initial hostname and missed the open redirect parameter that bounced your browser to a fake payment gateway.",
         rule: "Verify the final landing URL, not just the initial scanned hostname.",
         cluesUncovered: ["Overlooked open redirect parameter"],
+      },
+      submit_consumer_data: {
+        title: "Consumer Information Harvested!",
+        outcome: "wrong",
+        explanation:
+          "Entering consumer identifiers validates your identity to the scam operator, setting up targeted follow-up phone extortion.",
+        rule: "Never interact with or submit forms on unverified redirect destinations.",
+        cluesUncovered: ["Submitted identity details on rogue landing page"],
+      },
+      forward_suspicious_bill: {
+        title: "Spreading Unverified Threat (Partial)",
+        outcome: "partial",
+        explanation:
+          "Asking neighbors may help, but forwarding unverified payment links risks having elderly or unwary residents scan and fall victim.",
+        rule: "Verify bills through official provider accounts rather than circulating questionable flyers.",
+        cluesUncovered: ["Circulated ambiguous payment QR"],
       },
     },
   },
@@ -347,22 +451,32 @@ export const qrSafetyChallenges = [
       ],
       availableActions: [
         {
+          id: "act_install_profile",
+          label: "Scan Shortened Link & Install Requested Device Configuration Profile for Free 5G",
+          evaluationKey: "install_rogue_profile",
+        },
+        {
           id: "act_connect_native",
-          label: "Do Not Scan; Connect to Wi-Fi via Phone Settings / Captive Portal Only",
-          variant: "primary",
+          label: "Do Not Scan; Connect to Wi-Fi via Phone Settings / Native Captive Portal Only",
           evaluationKey: "native_wifi_only",
         },
         {
-          id: "act_install_profile",
-          label: "Scan Shortened Link & Install Requested Configuration Profile",
-          variant: "danger",
-          evaluationKey: "install_rogue_profile",
+          id: "act_open_incognito_otp",
+          label: "Open Shortened Link in Incognito Tab and Enter Phone Number for SMS Access Code",
+          evaluationKey: "enter_otp_shortlink",
+        },
+        {
+          id: "act_download_speedtest",
+          label: "Download 'SpeedTest_Accelerator.apk' Promoted on the Landing Page",
+          evaluationKey: "download_speedtest_apk",
         },
       ],
     },
     evaluation: {
       native_wifi_only: { outcome: "correct", score: 100, xp: 140, lifeLost: false, key: "native_wifi_only" },
       install_rogue_profile: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "install_rogue_profile" },
+      enter_otp_shortlink: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "enter_otp_shortlink" },
+      download_speedtest_apk: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "download_speedtest_apk" },
     },
     feedback: {
       native_wifi_only: {
@@ -383,6 +497,22 @@ export const qrSafetyChallenges = [
           "The profile installed a malicious root SSL certificate that decrypts your NetBanking and private communications.",
         rule: "Never install downloaded profiles from QR codes.",
         cluesUncovered: ["Installed hostile configuration profile"],
+      },
+      enter_otp_shortlink: {
+        title: "Phone Number & OTP Intercepted!",
+        outcome: "wrong",
+        explanation:
+          "The shortened landing page collected your phone number and OTP to subscribe your mobile number to expensive premium SMS billing services.",
+        rule: "Do not submit phone numbers or verification codes on unverified shortened URLs.",
+        cluesUncovered: ["Entered personal OTP on shortened link"],
+      },
+      download_speedtest_apk: {
+        title: "Malware Installed on Smartphone!",
+        outcome: "wrong",
+        explanation:
+          "The speed-test application contained spyware configured to access call logs and contacts.",
+        rule: "Never install APKs from public Wi-Fi redirect pages.",
+        cluesUncovered: ["Downloaded malicious utility app"],
       },
     },
   },
@@ -418,22 +548,32 @@ export const qrSafetyChallenges = [
       ],
       availableActions: [
         {
+          id: "act_scan_and_enter_pin",
+          label: "Scan with UPI App & Enter Your 6-Digit Secret PIN Quickly to Start Urgent Charging",
+          evaluationKey: "blind_upi_pin",
+        },
+        {
+          id: "act_trust_bharat_domain",
+          label: "Approve Payment Request Because 'Bharat' and 'HDFC' Appear in the URL Text",
+          evaluationKey: "trust_keywords_trap",
+        },
+        {
           id: "act_use_official_ev_app",
-          label: "Use Official Verified EV Charging App on Your Phone to Start Session",
-          variant: "primary",
+          label: "Use Official Verified EV Charging App on Your Phone to Start and Authorize Session",
           evaluationKey: "use_official_app",
         },
         {
-          id: "act_scan_and_enter_pin",
-          label: "Scan with UPI App & Enter Your 6-Digit Secret PIN without Checking Amount",
-          variant: "danger",
-          evaluationKey: "blind_upi_pin",
+          id: "act_test_dummy_pin",
+          label: "Scan with UPI App and Enter Dummy PIN '0000' to Test if Payment System Validates",
+          evaluationKey: "dummy_pin_trap",
         },
       ],
     },
     evaluation: {
       use_official_app: { outcome: "correct", score: 100, xp: 150, lifeLost: false, key: "use_official_app" },
       blind_upi_pin: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "blind_upi_pin" },
+      trust_keywords_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "trust_keywords_trap" },
+      dummy_pin_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "dummy_pin_trap" },
     },
     feedback: {
       use_official_app: {
@@ -454,6 +594,22 @@ export const qrSafetyChallenges = [
           "You entered your secret PIN without checking the merchant name or amount on the UPI confirmation sheet.",
         rule: "Entering your UPI PIN authorizes a debit from your account. Always double-check amount and recipient.",
         cluesUncovered: ["Entered UPI PIN without checking transaction details"],
+      },
+      trust_keywords_trap: {
+        title: "Fooled by Brand Names in Query String!",
+        outcome: "wrong",
+        explanation:
+          "Attackers frequently embed words like 'Bharat', 'Gov', or bank names inside unverified subdomains and parameters to inspire false trust.",
+        rule: "Never trust domains based solely on familiar keywords in the URL text.",
+        cluesUncovered: ["Fell for brand keyword spoofing"],
+      },
+      dummy_pin_trap: {
+        title: "Transaction Failed but Data Transmitted!",
+        outcome: "wrong",
+        explanation:
+          "Entering invalid PINs still submits your UPI intent session to the receiving gateway. If you accidentally entered your real PIN, the money is gone instantly.",
+        rule: "Do not test unverified payment requests with real banking apps.",
+        cluesUncovered: ["Attempted unsafe trial with UPI client"],
       },
     },
   },
@@ -495,22 +651,32 @@ export const qrSafetyChallenges = [
       ],
       availableActions: [
         {
+          id: "act_pay_anyway",
+          label: "Scan Standee and Pay INR 1,200 Immediately to Save Time in the Busy Queue",
+          evaluationKey: "pay_tampered_qr",
+        },
+        {
           id: "act_inform_cashier",
-          label: "Stop Payment; Alert the Cashier that Their Standee Has Been Tampered",
-          variant: "primary",
+          label: "Stop Payment; Alert Cashier that Their Standee Has Been Tampered with a Rogue Sticker",
           evaluationKey: "alert_merchant_tamper",
         },
         {
-          id: "act_pay_anyway",
-          label: "Pay the QR Code Anyway to Save Time",
-          variant: "danger",
-          evaluationKey: "pay_tampered_qr",
+          id: "act_check_tick_only",
+          label: "Scan and Pay if UPI App Shows Any Verified Green Tick on the Screen",
+          evaluationKey: "trust_green_tick_trap",
+        },
+        {
+          id: "act_pay_cash_silent",
+          label: "Pay Cash Instead and Walk Away Without Mentioning the Tampered Standee to the Shopkeeper",
+          evaluationKey: "pay_cash_unreported",
         },
       ],
     },
     evaluation: {
       alert_merchant_tamper: { outcome: "correct", score: 100, xp: 160, lifeLost: false, key: "alert_merchant_tamper" },
       pay_tampered_qr: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "pay_tampered_qr" },
+      trust_green_tick_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "trust_green_tick_trap" },
+      pay_cash_unreported: { outcome: "partial", score: 50, xp: 50, lifeLost: false, key: "pay_cash_unreported" },
     },
     feedback: {
       alert_merchant_tamper: {
@@ -531,6 +697,22 @@ export const qrSafetyChallenges = [
           "Your INR 1,200 went to the criminal. The shop owner received nothing and demanded payment again.",
         rule: "Confirm payee name matches the merchant.",
         cluesUncovered: ["Paid fraudulent standee overlay"],
+      },
+      trust_green_tick_trap: {
+        title: "Green Tick Misunderstood!",
+        outcome: "wrong",
+        explanation:
+          "A green checkmark in payment apps often only means the VPA format is valid, not that the recipient is the authentic store owner standing in front of you.",
+        rule: "Always match the business name explicitly with the merchant.",
+        cluesUncovered: ["Misinterpreted VPA validation badge"],
+      },
+      pay_cash_unreported: {
+        title: "Personal Safety (Unreported Hazard)",
+        outcome: "partial",
+        explanation:
+          "You protected your own cash, but dozens of following customers will scan the sticker and lose their money.",
+        rule: "Alert store owners immediately when counter payment materials are tampered.",
+        cluesUncovered: ["Avoided personal loss but left threat active"],
       },
     },
   },
@@ -580,22 +762,32 @@ export const qrSafetyChallenges = [
       ],
       availableActions: [
         {
+          id: "act_scan_receive",
+          label: "Scan QR in UPI App and Type UPI PIN Expecting INR 25,000 to Credit into Your Bank",
+          evaluationKey: "fall_for_reverse_qr",
+        },
+        {
+          id: "act_send_one_rupee_test",
+          label: "Type UPI PIN with INR 1 First as a Test to See if Incoming Payment Connects",
+          evaluationKey: "test_reverse_qr_trap",
+        },
+        {
           id: "act_refuse_reverse_qr",
-          label: "Refuse & Block Scammer: 'You do not enter PIN or scan QR to receive money'",
-          variant: "primary",
+          label: "Refuse & Block Scammer: 'You NEVER need to enter a PIN or scan a QR code to receive money'",
           evaluationKey: "block_reverse_qr",
         },
         {
-          id: "act_scan_receive",
-          label: "Scan the QR and Type Your UPI PIN Expecting to Receive INR 25,000",
-          variant: "danger",
-          evaluationKey: "fall_for_reverse_qr",
+          id: "act_share_full_bank_details",
+          label: "Share Full NetBanking Username, Account Number, and IFSC in Chat Instead",
+          evaluationKey: "share_bank_creds_trap",
         },
       ],
     },
     evaluation: {
       block_reverse_qr: { outcome: "correct", score: 100, xp: 170, lifeLost: false, key: "block_reverse_qr" },
       fall_for_reverse_qr: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "fall_for_reverse_qr" },
+      test_reverse_qr_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "test_reverse_qr_trap" },
+      share_bank_creds_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "share_bank_creds_trap" },
     },
     feedback: {
       block_reverse_qr: {
@@ -616,6 +808,22 @@ export const qrSafetyChallenges = [
           "You scanned the QR and entered your UPI PIN. The transaction authorized a debit of INR 25,000 from your account to the scammer.",
         rule: "Entering your UPI PIN ALWAYS debits your account. Receiving money requires zero action.",
         cluesUncovered: ["Fell for reverse-QR receive money trap"],
+      },
+      test_reverse_qr_trap: {
+        title: "INR 1 Sent; Trap Still Active!",
+        outcome: "wrong",
+        explanation:
+          "Entering your PIN for INR 1 proved the fundamental concept: entering a PIN ALWAYS sends money out of your account, never receives it.",
+        rule: "Never enter a PIN to receive money, regardless of amount.",
+        cluesUncovered: ["Tested unsafe reverse-QR transfer"],
+      },
+      share_bank_creds_trap: {
+        title: "Over-Disclosure of Banking Data!",
+        outcome: "wrong",
+        explanation:
+          "Sharing full NetBanking usernames and account credentials in unencrypted marketplace chats enables credential stuffing attacks.",
+        rule: "Never share sensitive banking credentials in buyer chats.",
+        cluesUncovered: ["Over-shared banking data with unknown buyer"],
       },
     },
   },
@@ -650,16 +858,22 @@ export const qrSafetyChallenges = [
           ],
           availableActions: [
             {
-              id: "act_abort_apk",
-              label: "Cancel Installation Immediately & Discard Malicious Badge",
-              type: "advance",
-              nextStep: "step_2_safe",
-            },
-            {
               id: "act_install_apk",
-              label: "Allow Unknown Sources & Sideload 'ContactSync.apk'",
+              label: "Allow Unknown Sources & Sideload 'ContactSync.apk' to Import Contacts",
               type: "advance",
               nextStep: "step_2_infected",
+            },
+            {
+              id: "act_download_inspect_perms",
+              label: "Download APK File to Inspect Permissions in File Manager Before Deciding",
+              type: "advance",
+              nextStep: "step_2_downloaded_risk",
+            },
+            {
+              id: "act_abort_apk",
+              label: "Cancel Installation Immediately; Decline APK Sideload and Discard Rogue Badge",
+              type: "advance",
+              nextStep: "step_2_safe",
             },
           ],
         },
@@ -679,9 +893,29 @@ export const qrSafetyChallenges = [
           availableActions: [
             {
               id: "act_complete_qr_audit",
-              label: "Finalize Threat Report",
-              variant: "primary",
+              label: "Finalize Threat Report & Warn Conference Security",
               evaluationKey: "blocked_apk_quishing",
+            },
+          ],
+        },
+        {
+          id: "step_2_downloaded_risk",
+          stepNumber: 2,
+          contextTitle: "Hostile Package on Storage",
+          dialogue: [
+            {
+              sender: "Storage Sentinel",
+              role: "system",
+              timestamp: "05:16 PM",
+              text: "Warning: 'ContactSync.apk' contains embedded obfuscated payload attempting automatic intent execution.",
+            },
+          ],
+          inspectableClues: ["Malicious binary staged on device storage."],
+          availableActions: [
+            {
+              id: "act_purge_and_report",
+              label: "Purge Downloaded Binary Immediately & Escalate to Security",
+              evaluationKey: "purged_apk_quishing",
             },
           ],
         },
@@ -701,8 +935,7 @@ export const qrSafetyChallenges = [
           availableActions: [
             {
               id: "act_acknowledge_apk_trojan",
-              label: "Acknowledge Infection",
-              variant: "danger",
+              label: "Acknowledge Device Compromise & Initiate Factory Reset",
               evaluationKey: "apk_quishing_failed",
             },
           ],
@@ -711,6 +944,7 @@ export const qrSafetyChallenges = [
     },
     evaluation: {
       blocked_apk_quishing: { outcome: "correct", score: 100, xp: 180, lifeLost: false, key: "blocked_apk_quishing" },
+      purged_apk_quishing: { outcome: "partial", score: 60, xp: 80, lifeLost: false, key: "purged_apk_quishing" },
       apk_quishing_failed: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "apk_quishing_failed" },
     },
     feedback: {
@@ -724,6 +958,14 @@ export const qrSafetyChallenges = [
           "Identified malicious APK payload disguised as contact card",
           "Blocked mobile banking Trojan installation",
         ],
+      },
+      purged_apk_quishing: {
+        title: "Risky Download Purged (Partial)",
+        outcome: "partial",
+        explanation:
+          "You deleted the malicious file before installation, but downloading unknown binaries onto storage carries zero-day dropper risks.",
+        rule: "Reject APK downloads immediately at the browser prompt.",
+        cluesUncovered: ["Downloaded and manually purged hostile binary"],
       },
       apk_quishing_failed: {
         title: "Banking Trojan Installed!",
@@ -854,21 +1096,23 @@ export const qrSafetyChallenges = [
       },
       availableActions: [
         {
-          id: "act_sim_abort_quish",
-          label: "Abort Chain: Close Tab, Refuse NetBanking Entry & Report Sticker to Airport Security Desk",
-          variant: "primary",
-          evaluationKey: "sim_abort_quishing_chain",
-        },
-        {
           id: "act_sim_enter_netbanking",
           label: "Enter NetBanking User ID and Password to Complete the INR 1 Verification",
-          variant: "danger",
           evaluationKey: "sim_submit_netbanking_quish",
+        },
+        {
+          id: "act_sim_test_fake_creds",
+          label: "Enter Dummy NetBanking Credentials to See if the Server Rejects Fake User IDs",
+          evaluationKey: "sim_submit_fake_netbanking",
+        },
+        {
+          id: "act_sim_abort_quish",
+          label: "Abort Chain: Close Tab, Refuse NetBanking Entry & Report Sticker to Airport Security Desk",
+          evaluationKey: "sim_abort_quishing_chain",
         },
         {
           id: "act_sim_ignore_only",
           label: "Close Tab on Phone and Walk Away Without Reporting the Sticker",
-          variant: "secondary",
           evaluationKey: "sim_quish_unreported",
         },
       ],
@@ -876,6 +1120,7 @@ export const qrSafetyChallenges = [
     evaluation: {
       sim_abort_quishing_chain: { outcome: "correct", score: 100, xp: 200, lifeLost: false, key: "sim_abort_quishing_chain" },
       sim_submit_netbanking_quish: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "sim_submit_netbanking_quish" },
+      sim_submit_fake_netbanking: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "sim_submit_fake_netbanking" },
       sim_quish_unreported: { outcome: "partial", score: 50, xp: 70, lifeLost: false, key: "sim_quish_unreported" },
     },
     feedback: {
@@ -899,6 +1144,14 @@ export const qrSafetyChallenges = [
           "You entered your NetBanking password into a rogue quishing gateway for fake airport Wi-Fi. Attackers immediately initiated unauthorized wire transfers.",
         rule: "Public Wi-Fi never requires bank logins or NetBanking credentials.",
         cluesUncovered: ["Surrendered bank credentials to quishing portal"],
+      },
+      sim_submit_fake_netbanking: {
+        title: "INTERACTIVE HONEYPOT TRAP TRIGGERED!",
+        outcome: "wrong",
+        explanation:
+          "Quishing harvesters accept any typed input and immediately prompt for SMS OTPs, while recording your IP and device fingerprint.",
+        rule: "Never interact with malicious harvesting portals; close the connection immediately.",
+        cluesUncovered: ["Interacted with active credential harvester"],
       },
       sim_quish_unreported: {
         title: "PARTIAL SUCCESS (UNREPORTED)",

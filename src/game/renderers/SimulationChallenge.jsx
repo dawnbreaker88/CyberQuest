@@ -311,7 +311,7 @@ export default function SimulationChallenge({ challenge, session, onAction }) {
           )}
         </div>
 
-        {/* Global Incident Decision Panel */}
+        {/* Global Incident Decision Panel - Strictly Neutral */}
         <div className="p-5 sm:p-6 bg-[#0D1119] border-t border-[#273347] space-y-3 font-mono">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-[#F4F6F8] uppercase tracking-wider block">
@@ -323,29 +323,22 @@ export default function SimulationChallenge({ challenge, session, onAction }) {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            {content.availableActions?.map((action, idx) => {
-              const isPrimary = action.variant === 'primary';
-              const isDanger = action.variant === 'danger';
-              return (
-                <button
-                  key={action.id}
-                  onClick={() => onAction(action)}
-                  className={`p-3.5 rounded-xl border text-left text-xs font-bold transition-all flex items-center justify-between gap-3 cursor-pointer group shadow-md ${
-                    isPrimary
-                      ? 'bg-[#192131] border-[#73D6B1]/40 text-[#73D6B1] hover:bg-[#73D6B1]/10'
-                      : isDanger
-                      ? 'bg-[#192131] border-[#FF7468]/40 text-[#FF7468] hover:bg-[#FF7468]/10'
-                      : 'bg-[#131925] border-[#273347] text-[#F4F6F8] hover:border-[#39C6E8] hover:bg-[#192131]'
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-[11px] text-[#6F7B8A] font-mono">0{idx + 1}</span>
-                    <span>{action.label}</span>
-                  </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-[#6F7B8A] group-hover:text-[#F4F6F8] transition-transform group-hover:translate-x-0.5 shrink-0" />
-                </button>
-              );
-            })}
+            {content.availableActions?.map((action, idx) => (
+              <button
+                key={action.id}
+                type="button"
+                onClick={() => onAction(action)}
+                className="w-full p-4 rounded-xl border border-[#273347] bg-[#131925] hover:bg-[#192131] hover:border-[#39C6E8] text-[#F4F6F8] text-xs font-bold transition-all flex items-center justify-between gap-3 cursor-pointer group shadow-sm text-left"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="w-6 h-6 rounded-md bg-[#0D1119] border border-[#273347] text-[#39C6E8] flex items-center justify-center text-xs font-mono font-bold shrink-0">
+                    0{idx + 1}
+                  </span>
+                  <span>{action.label}</span>
+                </div>
+                <ArrowRight className="w-4 h-4 text-[#6F7B8A] group-hover:text-[#39C6E8] transition-transform group-hover:translate-x-1 shrink-0" />
+              </button>
+            ))}
           </div>
         </div>
 

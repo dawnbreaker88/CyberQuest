@@ -135,7 +135,7 @@ export default function ChatChallenge({ challenge, session, onAction }) {
           </div>
         </div>
 
-        {/* Sender Inspection Dropdown */}
+        {/* Sender Inspection Dropdown - Neutral */}
         {inspectedSender && sender.details && (
           <div className="p-4 bg-[#0A0E17] border-b border-[#273347] grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono text-[#AAB3C0] animate-in fade-in duration-200">
             <div>
@@ -144,15 +144,15 @@ export default function ChatChallenge({ challenge, session, onAction }) {
             </div>
             <div>
               <span className="text-[#6F7B8A]">Report History: </span>
-              <span className="text-[#FF7468] font-semibold">{sender.details.reports || '3 recent scam flags'}</span>
+              <span className="text-[#F4F6F8] font-medium">{sender.details.reports || '3 recent external flags'}</span>
             </div>
             <div>
-              <span className="text-[#6F7B8A]">Registered Location: </span>
-              <span className="text-[#F4F6F8]">{sender.details.location || 'Unknown / VoIP Gateway'}</span>
+              <span className="text-[#6F7B8A]">Origin Gateway: </span>
+              <span className="text-[#F4F6F8]">{sender.details.location || 'External VoIP Gateway'}</span>
             </div>
             <div>
               <span className="text-[#6F7B8A]">Security Rating: </span>
-              <span className="text-[#FFB84D]">{sender.details.trustLevel || 'Unverified External'}</span>
+              <span className="text-[#F4F6F8]">{sender.details.trustLevel || 'Unverified External'}</span>
             </div>
           </div>
         )}
@@ -194,43 +194,36 @@ export default function ChatChallenge({ challenge, session, onAction }) {
 
                 <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#6F7B8A] px-1">
                   <span>{msg.timestamp || 'Just now'}</span>
-                  {isMe && <CheckCheck className="w-3 h-3 text-[#73D6B1]" />}
+                  {isMe && <CheckCheck className="w-3 h-3 text-[#39C6E8]" />}
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* Response Action Decision Grid */}
+        {/* Response Action Decision Grid - Strictly Neutral */}
         <div className="p-5 bg-[#0D1119] border-t border-[#273347] space-y-3 font-mono">
-          <span className="text-[11px] font-bold text-[#F4F6F8] uppercase tracking-wider block">
+          <span className="text-[11px] font-bold text-[#F4F6F8] uppercase tracking-wider block text-left">
             SELECT HOW TO RESPOND / ACT:
           </span>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            {content.availableActions?.map((action, idx) => {
-              const isPrimary = action.variant === 'primary';
-              const isDanger = action.variant === 'danger';
-              return (
-                <button
-                  key={action.id}
-                  onClick={() => onAction(action)}
-                  className={`p-3.5 rounded-xl border text-left text-xs font-bold transition-all flex items-center justify-between gap-3 cursor-pointer group shadow-sm ${
-                    isPrimary
-                      ? 'bg-[#192131] border-[#73D6B1]/40 text-[#73D6B1] hover:bg-[#73D6B1]/10'
-                      : isDanger
-                      ? 'bg-[#192131] border-[#FF7468]/40 text-[#FF7468] hover:bg-[#FF7468]/10'
-                      : 'bg-[#131925] border-[#273347] text-[#F4F6F8] hover:border-[#39C6E8] hover:bg-[#192131]'
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-[11px] text-[#6F7B8A] font-mono">0{idx + 1}</span>
-                    <span>{action.label}</span>
-                  </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-[#6F7B8A] group-hover:text-[#F4F6F8] transition-transform group-hover:translate-x-0.5 shrink-0" />
-                </button>
-              );
-            })}
+            {content.availableActions?.map((action, idx) => (
+              <button
+                key={action.id}
+                type="button"
+                onClick={() => onAction(action)}
+                className="w-full p-4 rounded-xl border border-[#273347] bg-[#131925] hover:bg-[#192131] hover:border-[#39C6E8] text-[#F4F6F8] text-xs font-bold transition-all flex items-center justify-between gap-3 cursor-pointer group shadow-sm text-left"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="w-6 h-6 rounded-md bg-[#0D1119] border border-[#273347] text-[#39C6E8] flex items-center justify-center text-xs font-mono font-bold shrink-0">
+                    0{idx + 1}
+                  </span>
+                  <span>{action.label}</span>
+                </div>
+                <ArrowRight className="w-3.5 h-3.5 text-[#6F7B8A] group-hover:text-[#39C6E8] transition-transform group-hover:translate-x-0.5 shrink-0" />
+              </button>
+            ))}
           </div>
         </div>
 

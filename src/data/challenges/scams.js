@@ -52,22 +52,32 @@ export const scamChallenges = [
       ],
       availableActions: [
         {
+          id: "act_pay_15_fee",
+          label: "Click Link and Enter Debit Card Details to Pay INR 15 to Avoid Parcel Return",
+          evaluationKey: "pay_fake_parcel_fee",
+        },
+        {
+          id: "act_reply_sms_query",
+          label: "Reply to the SMS Asking for the Sender Name and Item Description",
+          evaluationKey: "reply_smishing_sms",
+        },
+        {
           id: "act_block_sms_scam",
-          label: "Block Number, Mark SMS as Spam & Check Tracking on Official App",
-          variant: "primary",
+          label: "Block Number, Mark SMS as Spam & Check Tracking Directly on Official Courier App",
           evaluationKey: "block_parcel_scam",
         },
         {
-          id: "act_pay_15_fee",
-          label: "Click Link and Enter Debit Card Details to Pay INR 15",
-          variant: "danger",
-          evaluationKey: "pay_fake_parcel_fee",
+          id: "act_enter_fake_card",
+          label: "Open the Link and Submit Dummy Card Details to Test if the Website Rejects Them",
+          evaluationKey: "dummy_card_smishing_test",
         },
       ],
     },
     evaluation: {
       block_parcel_scam: { outcome: "correct", score: 100, xp: 100, lifeLost: false, key: "block_parcel_scam" },
       pay_fake_parcel_fee: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "pay_fake_parcel_fee" },
+      reply_smishing_sms: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "reply_smishing_sms" },
+      dummy_card_smishing_test: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "dummy_card_smishing_test" },
     },
     feedback: {
       block_parcel_scam: {
@@ -88,6 +98,22 @@ export const scamChallenges = [
           "The INR 15 payment page was a harvesting clone. The attacker used your card details to execute a fraudulent INR 45,000 transaction.",
         rule: "Never enter card details on links received via unsolicited SMS.",
         cluesUncovered: ["Entered card details on unverified smishing link"],
+      },
+      reply_smishing_sms: {
+        title: "Phone Number Flagged as Active Target!",
+        outcome: "wrong",
+        explanation:
+          "Replying to smishing messages confirms to automated dialing systems that your number is active and monitored, triggering high-frequency scam campaigns.",
+        rule: "Do not reply to unsolicited phishing messages.",
+        cluesUncovered: ["Confirmed active phone line to scammers"],
+      },
+      dummy_card_smishing_test: {
+        title: "Browser Fingerprinted by Harvester!",
+        outcome: "wrong",
+        explanation:
+          "Interacting with harvesting forms passes session tokens and browser fingerprints to the attacker's infrastructure.",
+        rule: "Never interact with malicious domains.",
+        cluesUncovered: ["Engaged with hostile web form"],
       },
     },
   },
@@ -138,21 +164,31 @@ export const scamChallenges = [
       availableActions: [
         {
           id: "act_verify_bank_statement",
-          label: "Check Official Bank Statement Directly & Report Scam Email",
-          variant: "primary",
+          label: "Check Official Bank Statement Directly via NetBanking App & Report Phishing Email",
           evaluationKey: "verify_statement_scam",
         },
         {
           id: "act_send_money_back",
-          label: "Click Link and UPI Transfer INR 44,550 Back to the Sender",
-          variant: "danger",
+          label: "Click Link and UPI Transfer INR 44,550 Back Immediately to Save the Staff Member",
           evaluationKey: "send_over_refund",
+        },
+        {
+          id: "act_send_partial_refund",
+          label: "Transfer INR 450 Back as a Goodwill Measure Until Accounts Re-Evaluates",
+          evaluationKey: "send_partial_refund_trap",
+        },
+        {
+          id: "act_reply_email_manager",
+          label: "Reply to the Email Asking to Speak with the Billing Department Manager",
+          evaluationKey: "reply_phishing_email",
         },
       ],
     },
     evaluation: {
       verify_statement_scam: { outcome: "correct", score: 100, xp: 110, lifeLost: false, key: "verify_statement_scam" },
       send_over_refund: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "send_over_refund" },
+      send_partial_refund_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "send_partial_refund_trap" },
+      reply_phishing_email: { outcome: "partial", score: 40, xp: 40, lifeLost: false, key: "reply_phishing_email" },
     },
     feedback: {
       verify_statement_scam: {
@@ -173,6 +209,22 @@ export const scamChallenges = [
           "You sent INR 44,550 of your own money to the scammer. No money was ever sent to you in the first place.",
         rule: "Never send money to 'return' an unverified refund.",
         cluesUncovered: ["Fell for accidental over-refund manipulation"],
+      },
+      send_partial_refund_trap: {
+        title: "Partial Loss Incurred!",
+        outcome: "wrong",
+        explanation:
+          "Sending even INR 450 hands real money to scammers while opening a direct payment channel for follow-up extortion.",
+        rule: "Never send funds without independent bank statement verification.",
+        cluesUncovered: ["Transferred funds without account verification"],
+      },
+      reply_phishing_email: {
+        title: "Engaged with Scammers (Partial)",
+        outcome: "partial",
+        explanation:
+          "Replying keeps the dialogue alive with scammers who will fabricate fake phone recordings and forged employee termination notices.",
+        rule: "Do not negotiate with phishing emails; verify through primary customer service portals.",
+        cluesUncovered: ["Engaged in dialogue with refund syndicate"],
       },
     },
   },
@@ -211,22 +263,32 @@ export const scamChallenges = [
       ],
       availableActions: [
         {
+          id: "act_pay_gst_fee",
+          label: "Pay INR 4,999 GST Clearance via UPI to Claim the SUV Before Timer Expires",
+          evaluationKey: "pay_prize_fee",
+        },
+        {
+          id: "act_enter_address_cash_opt",
+          label: "Enter Home Address and Select 'Cash Alternative' Option on the Form",
+          evaluationKey: "submit_prize_form_trap",
+        },
+        {
           id: "act_close_prize_scam",
-          label: "Close Tab Immediately & Report URL to National Cyber Crime Portal",
-          variant: "primary",
+          label: "Close Tab Immediately & Report URL to National Cyber Crime Reporting Portal",
           evaluationKey: "close_lottery_scam",
         },
         {
-          id: "act_pay_gst_fee",
-          label: "Pay INR 4,999 GST Clearance via UPI to Claim Car",
-          variant: "danger",
-          evaluationKey: "pay_prize_fee",
+          id: "act_pay_with_credit_card",
+          label: "Pay with Credit Card Assuming Bank Chargeback Will Protect You if It's Fake",
+          evaluationKey: "chargeback_assumption_trap",
         },
       ],
     },
     evaluation: {
       close_lottery_scam: { outcome: "correct", score: 100, xp: 120, lifeLost: false, key: "close_lottery_scam" },
       pay_prize_fee: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "pay_prize_fee" },
+      submit_prize_form_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "submit_prize_form_trap" },
+      chargeback_assumption_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "chargeback_assumption_trap" },
     },
     feedback: {
       close_lottery_scam: {
@@ -247,6 +309,22 @@ export const scamChallenges = [
           "Once you pay the INR 4,999, the scammer will demand another INR 15,000 for 'Road Tax', then INR 25,000 for 'Insurance' until your savings are drained.",
         rule: "Never pay upfront fees to claim prizes.",
         cluesUncovered: ["Paid upfront clearance fee for fictitious prize"],
+      },
+      submit_prize_form_trap: {
+        title: "Personal Address & Identity Harvested!",
+        outcome: "wrong",
+        explanation:
+          "Submitting personal addresses on lottery scam landing pages leads to physical mail fraud and identity impersonation.",
+        rule: "Never submit personal information on unsolicited prize pages.",
+        cluesUncovered: ["Submitted personal data to fake lottery portal"],
+      },
+      chargeback_assumption_trap: {
+        title: "Chargeback Denied & Card Compromised!",
+        outcome: "wrong",
+        explanation:
+          "Authorizing transactions with OTP makes chargebacks difficult to dispute, while giving criminals your active card details.",
+        rule: "Do not rely on chargebacks to engage with obvious fraud.",
+        cluesUncovered: ["Attempted risky payment relying on chargebacks"],
       },
     },
   },
@@ -281,16 +359,22 @@ export const scamChallenges = [
           ],
           availableActions: [
             {
+              id: "act_call_helpline",
+              label: "Call the Toll-Free Number and Allow Engineer to Remote In via AnyDesk / TeamViewer",
+              type: "advance",
+              nextStep: "step_2_remote_hijack",
+            },
+            {
               id: "act_kill_browser_process",
-              label: "Force-Close Browser via Task Manager (Alt+F4 / Taskkill) and Run Legitimate Antivirus Scan",
+              label: "Force-Close Browser via Task Manager (Alt+F4 / Taskkill) and Run Local Antivirus Scan",
               type: "advance",
               nextStep: "step_2_triage_clean",
             },
             {
-              id: "act_call_helpline",
-              label: "Call the Toll-Free Number and Allow the Engineer to Remote In via AnyDesk",
+              id: "act_search_number_in_new_tab",
+              label: "Open a New Tab to Search if the 1800 Number is Valid While Leaving Popup Open",
               type: "advance",
-              nextStep: "step_2_remote_hijack",
+              nextStep: "step_2_prolonged_lock",
             },
           ],
         },
@@ -310,9 +394,29 @@ export const scamChallenges = [
           availableActions: [
             {
               id: "act_finish_support_audit",
-              label: "Complete Triage",
-              variant: "primary",
+              label: "Complete Security Triage",
               evaluationKey: "scareware_contained",
+            },
+          ],
+        },
+        {
+          id: "step_2_prolonged_lock",
+          stepNumber: 2,
+          contextTitle: "Browser Lock Loop Active",
+          dialogue: [
+            {
+              sender: "Browser State",
+              role: "system",
+              timestamp: "02:21 PM",
+              text: "The scareware script spawned 200 fullscreen popups, consuming 100% CPU memory.",
+            },
+          ],
+          inspectableClues: ["Browser denial-of-service loop."],
+          availableActions: [
+            {
+              id: "act_force_kill_now",
+              label: "Force Kill Browser Process via Task Manager",
+              evaluationKey: "scareware_killed_delayed",
             },
           ],
         },
@@ -332,8 +436,7 @@ export const scamChallenges = [
           availableActions: [
             {
               id: "act_fail_remote",
-              label: "Acknowledge Breach",
-              variant: "danger",
+              label: "Acknowledge Breach & Disconnect Network Cable",
               evaluationKey: "scareware_failed",
             },
           ],
@@ -342,6 +445,7 @@ export const scamChallenges = [
     },
     evaluation: {
       scareware_contained: { outcome: "correct", score: 100, xp: 130, lifeLost: false, key: "scareware_contained" },
+      scareware_killed_delayed: { outcome: "partial", score: 60, xp: 70, lifeLost: false, key: "scareware_killed_delayed" },
       scareware_failed: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "scareware_failed" },
     },
     feedback: {
@@ -355,6 +459,14 @@ export const scamChallenges = [
           "Recognized browser JavaScript scareware locker",
           "Force-closed browser without calling fake support",
         ],
+      },
+      scareware_killed_delayed: {
+        title: "Browser Locker Force-Terminated (Partial)",
+        outcome: "partial",
+        explanation:
+          "You eventually closed the process, but lingering on the page allowed resource exhaustion.",
+        rule: "Kill browser locker processes immediately using system task managers.",
+        cluesUncovered: ["Delayed termination of scareware script"],
       },
       scareware_failed: {
         title: "Machine Compromised via Remote Desktop!",
@@ -407,22 +519,32 @@ export const scamChallenges = [
       ],
       availableActions: [
         {
-          id: "act_reject_fake_escrow",
-          label: "Refuse & Report User: 'Real buyers pay directly on pickup; no advance fee needed'",
-          variant: "primary",
-          evaluationKey: "reject_fake_escrow",
+          id: "act_ask_for_army_id",
+          label: "Ask the Buyer to Send a Photo of Their Military ID Card Before Paying the Fee",
+          evaluationKey: "request_military_id_trap",
         },
         {
           id: "act_pay_escrow_fee",
-          label: "Pay INR 3,000 via UPI Expecting to Receive INR 15,000 Total",
-          variant: "danger",
+          label: "Pay INR 3,000 via UPI Expecting to Receive INR 15,000 Total from RBI Escrow",
           evaluationKey: "pay_fake_escrow",
+        },
+        {
+          id: "act_reject_fake_escrow",
+          label: "Refuse & Report User: 'Real buyers pay directly on pickup; sellers never pay fees to receive payment'",
+          evaluationKey: "reject_fake_escrow",
+        },
+        {
+          id: "act_send_own_qr",
+          label: "Send a Payment QR Code of Your Own Bank Account in Chat to Receive Funds",
+          evaluationKey: "send_qr_to_buyer_trap",
         },
       ],
     },
     evaluation: {
       reject_fake_escrow: { outcome: "correct", score: 100, xp: 140, lifeLost: false, key: "reject_fake_escrow" },
       pay_fake_escrow: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "pay_fake_escrow" },
+      request_military_id_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "request_military_id_trap" },
+      send_qr_to_buyer_trap: { outcome: "partial", score: 50, xp: 50, lifeLost: false, key: "send_qr_to_buyer_trap" },
     },
     feedback: {
       reject_fake_escrow: {
@@ -443,6 +565,22 @@ export const scamChallenges = [
           "You paid INR 3,000 to the scammer. The buyer was a criminal operating from a remote location with a fake ID card.",
         rule: "Never pay upfront fees to receive payment as a seller.",
         cluesUncovered: ["Paid fraudulent escrow activation fee"],
+      },
+      request_military_id_trap: {
+        title: "Fooled by Forged Defense ID!",
+        outcome: "wrong",
+        explanation:
+          "Scammers readily provide high-resolution forged Army / Police IDs stolen from other victims to overcome skepticism.",
+        rule: "Never rely on digital photos of identity cards sent over chat.",
+        cluesUncovered: ["Relied on forgeable identity card photos"],
+      },
+      send_qr_to_buyer_trap: {
+        title: "Risky Payment Negotiation (Partial)",
+        outcome: "partial",
+        explanation:
+          "Sharing your QR code did not surrender funds immediately, but engaging with active marketplace scammers risks social engineering follow-ups.",
+        rule: "Block fraudulent buyers immediately rather than continuing transaction negotiations.",
+        cluesUncovered: ["Continued transaction chat with identified scammer"],
       },
     },
   },
@@ -481,22 +619,32 @@ export const scamChallenges = [
       ],
       availableActions: [
         {
+          id: "act_panic_send_10k",
+          label: "Immediately Transfer INR 10,000 to the Unknown Number out of Urgent Panic",
+          evaluationKey: "panic_transfer_accident",
+        },
+        {
+          id: "act_send_partial_2k",
+          label: "Transfer INR 2,000 First and Request Hospital Bill Photo on WhatsApp",
+          evaluationKey: "send_partial_emergency_trap",
+        },
+        {
           id: "act_verify_aarav_family",
-          label: "Call Aarav's Real Known Number / His Parents / Mutual Friends Directly to Verify",
-          variant: "primary",
+          label: "Call Aarav's Real Known Number / His Family / Mutual Friends Directly to Verify Situation",
           evaluationKey: "verify_family_out_of_band",
         },
         {
-          id: "act_panic_send_10k",
-          label: "Immediately Transfer INR 10,000 to the Unknown Number out of Fear",
-          variant: "danger",
-          evaluationKey: "panic_transfer_accident",
+          id: "act_ask_hospital_location",
+          label: "Reply on Chat Asking for GPS Hospital Location While Waiting to Decide",
+          evaluationKey: "chat_delay_trap",
         },
       ],
     },
     evaluation: {
       verify_family_out_of_band: { outcome: "correct", score: 100, xp: 150, lifeLost: false, key: "verify_family_out_of_band" },
       panic_transfer_accident: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "panic_transfer_accident" },
+      send_partial_emergency_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "send_partial_emergency_trap" },
+      chat_delay_trap: { outcome: "partial", score: 40, xp: 40, lifeLost: false, key: "chat_delay_trap" },
     },
     feedback: {
       verify_family_out_of_band: {
@@ -517,6 +665,22 @@ export const scamChallenges = [
           "The scammer used information from your public Instagram/Facebook to fabricate a convincing emergency story.",
         rule: "Take a deep breath and verify through an independent channel.",
         cluesUncovered: ["Transferred funds under psychological panic"],
+      },
+      send_partial_emergency_trap: {
+        title: "INR 2,000 Lost to Impostor!",
+        outcome: "wrong",
+        explanation:
+          "Sending partial emergency money still delivers cash directly to the syndicate without validating if the emergency exists.",
+        rule: "Never send money based solely on unverified chat claims.",
+        cluesUncovered: ["Surrendered partial funds under emotional duress"],
+      },
+      chat_delay_trap: {
+        title: "Wasted Time in Scammer's Channel (Partial)",
+        outcome: "partial",
+        explanation:
+          "Asking questions within the compromised chat allows the attacker to feed forged Google Maps locations and doctor names.",
+        rule: "Break out of the attacker's channel; call known primary phone numbers immediately.",
+        cluesUncovered: ["Remained inside manipulated communication loop"],
       },
     },
   },
@@ -551,16 +715,22 @@ export const scamChallenges = [
           ],
           availableActions: [
             {
-              id: "act_report_investment_scam",
-              label: "Report Group as Fraudulent Investment Scheme & Exit Group",
-              type: "advance",
-              nextStep: "step_2_reported",
-            },
-            {
               id: "act_test_deposit",
-              label: "Deposit INR 20,000 to Test if the Bot Works",
+              label: "Deposit INR 20,000 to Test if the Algorithmic Bot Delivers Guaranteed Returns",
               type: "advance",
               nextStep: "step_2_deposited",
+            },
+            {
+              id: "act_ask_members_proof",
+              label: "Message Group Members Privately to Ask if They Successfully Withdrew Cash",
+              type: "advance",
+              nextStep: "step_2_shill_reinforcement",
+            },
+            {
+              id: "act_report_investment_scam",
+              label: "Report Group as Fraudulent Investment Scheme & Exit Group Immediately",
+              type: "advance",
+              nextStep: "step_2_reported",
             },
           ],
         },
@@ -580,9 +750,29 @@ export const scamChallenges = [
           availableActions: [
             {
               id: "act_finish_invest_audit",
-              label: "Complete Audit",
-              variant: "primary",
+              label: "Complete Investment Threat Audit",
               evaluationKey: "investment_scam_neutralized",
+            },
+          ],
+        },
+        {
+          id: "step_2_shill_reinforcement",
+          stepNumber: 2,
+          contextTitle: "Fake Social Proof Manipulation",
+          dialogue: [
+            {
+              sender: "Shill Account (Pooja_Trader_92)",
+              role: "vendor",
+              timestamp: "06:10 PM",
+              text: "Yes! I withdrew INR 1,50,000 yesterday! Prof. Sharma is 100% genuine, hurry and deposit before slots fill up!",
+            },
+          ],
+          inspectableClues: ["Syndicate shill accounts amplifying deception."],
+          availableActions: [
+            {
+              id: "act_exit_after_shill",
+              label: "Recognize Coordinated Bot Network & Exit Group",
+              evaluationKey: "investment_scam_shill_exit",
             },
           ],
         },
@@ -602,8 +792,7 @@ export const scamChallenges = [
           availableActions: [
             {
               id: "act_fail_pig_butcher",
-              label: "Acknowledge Loss",
-              variant: "danger",
+              label: "Acknowledge Financial Loss & File Police Complaint",
               evaluationKey: "investment_scam_failed",
             },
           ],
@@ -612,6 +801,7 @@ export const scamChallenges = [
     },
     evaluation: {
       investment_scam_neutralized: { outcome: "correct", score: 100, xp: 160, lifeLost: false, key: "investment_scam_neutralized" },
+      investment_scam_shill_exit: { outcome: "partial", score: 60, xp: 70, lifeLost: false, key: "investment_scam_shill_exit" },
       investment_scam_failed: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "investment_scam_failed" },
     },
     feedback: {
@@ -625,6 +815,14 @@ export const scamChallenges = [
           "Recognized impossible financial return promises",
           "Identified bot-driven social proof manipulation in Telegram",
         ],
+      },
+      investment_scam_shill_exit: {
+        title: "Group Exited After Bot Check (Partial)",
+        outcome: "partial",
+        explanation:
+          "You exited before depositing, but messaging group members exposed you to social engineering shill accounts.",
+        rule: "Do not consult group members in investment channels; they are often confederates.",
+        cluesUncovered: ["Interacted with syndicate shill accounts"],
       },
       investment_scam_failed: {
         title: "Victim of Pig Butchering Scam!",
@@ -683,22 +881,32 @@ export const scamChallenges = [
       ],
       availableActions: [
         {
+          id: "act_share_otp_to_block",
+          label: "Read Out the OTP '491028' to the Caller to Cancel the International Charge",
+          evaluationKey: "share_otp_scammer",
+        },
+        {
+          id: "act_read_first_three_digits",
+          label: "Read Only the First 3 Digits of the OTP to Test if the Caller is a Verified Bank Agent",
+          evaluationKey: "partial_otp_leak_trap",
+        },
+        {
           id: "act_hang_up_call_bank",
           label: "Hang Up Immediately; Call Official Bank Helpline on the Back of Your Debit Card",
-          variant: "primary",
           evaluationKey: "hangup_call_bank_back",
         },
         {
-          id: "act_share_otp_to_block",
-          label: "Read Out the OTP '491028' to the Caller to Cancel the Charge",
-          variant: "danger",
-          evaluationKey: "share_otp_scammer",
+          id: "act_ask_caller_for_balance",
+          label: "Ask the Caller to State Your Account Balance to Prove They Work at SBI",
+          evaluationKey: "ask_balance_pretext_trap",
         },
       ],
     },
     evaluation: {
       hangup_call_bank_back: { outcome: "correct", score: 100, xp: 170, lifeLost: false, key: "hangup_call_bank_back" },
       share_otp_scammer: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "share_otp_scammer" },
+      partial_otp_leak_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "partial_otp_leak_trap" },
+      ask_balance_pretext_trap: { outcome: "partial", score: 40, xp: 40, lifeLost: false, key: "ask_balance_pretext_trap" },
     },
     feedback: {
       hangup_call_bank_back: {
@@ -719,6 +927,22 @@ export const scamChallenges = [
           "You read the OTP to the criminal, which authorized their transaction to clear.",
         rule: "An OTP is your digital signature. Sharing it authorizes transactions.",
         cluesUncovered: ["Shared OTP over phone to unverified caller"],
+      },
+      partial_otp_leak_trap: {
+        title: "Partial Digits Aided Brute Force Attack!",
+        outcome: "wrong",
+        explanation:
+          "Sharing even half of an OTP drastically reduces the entropy required for attackers to guess the remaining digits.",
+        rule: "Never disclose any portion of an OTP.",
+        cluesUncovered: ["Disclosed partial authentication digits"],
+      },
+      ask_balance_pretext_trap: {
+        title: "Pretexting Extended (Partial)",
+        outcome: "partial",
+        explanation:
+          "Scammers often possess leaked bank statements from darknet dumps and can recite balances accurately to build credibility.",
+        rule: "Do not test callers; hang up and initiate the call yourself through official numbers.",
+        cluesUncovered: ["Relied on caller knowledge rather than out-of-band verification"],
       },
     },
   },
@@ -768,22 +992,32 @@ export const scamChallenges = [
       ],
       availableActions: [
         {
+          id: "act_pay_recovery_stamp_fee",
+          label: "Pay INR 7,500 Court Stamp Fee to Release the Recovered INR 1,20,000",
+          evaluationKey: "pay_recovery_scam",
+        },
+        {
+          id: "act_send_pan_aadhaar_docs",
+          label: "Email Scanned PAN & Aadhaar Cards to Prove Fund Ownership Before Paying",
+          evaluationKey: "send_identity_docs_trap",
+        },
+        {
           id: "act_report_recovery_scam",
-          label: "Recognize as Recovery Scam & Forward to 1930 Cyber Crime Helpline",
-          variant: "primary",
+          label: "Recognize as Secondary Recovery Scam & Forward to 1930 Cyber Crime Helpline",
           evaluationKey: "report_secondary_recovery",
         },
         {
-          id: "act_pay_recovery_stamp_fee",
-          label: "Pay INR 7,500 to Recover the Seized INR 1,20,000",
-          variant: "danger",
-          evaluationKey: "pay_recovery_scam",
+          id: "act_request_case_docket",
+          label: "Reply to Email Requesting the Official Court Docket FIR Number",
+          evaluationKey: "reply_recovery_email",
         },
       ],
     },
     evaluation: {
       report_secondary_recovery: { outcome: "correct", score: 100, xp: 180, lifeLost: false, key: "report_secondary_recovery" },
       pay_recovery_scam: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "pay_recovery_scam" },
+      send_identity_docs_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "send_identity_docs_trap" },
+      reply_recovery_email: { outcome: "partial", score: 40, xp: 40, lifeLost: false, key: "reply_recovery_email" },
     },
     feedback: {
       report_secondary_recovery: {
@@ -804,6 +1038,22 @@ export const scamChallenges = [
           "You paid INR 7,500 to the same syndicate that ran the original scam.",
         rule: "Never pay upfront fees to recover previously lost funds.",
         cluesUncovered: ["Fell for secondary recovery fee trap"],
+      },
+      send_identity_docs_trap: {
+        title: "Identity Documents Harvested!",
+        outcome: "wrong",
+        explanation:
+          "Sending PAN and Aadhaar copies allows the syndicate to open mule bank accounts and apply for micro-loans in your name.",
+        rule: "Never email identity documents to unvetted recovery services.",
+        cluesUncovered: ["Surrendered government ID documents to fraud ring"],
+      },
+      reply_recovery_email: {
+        title: "Engaged with Recovery Harvesters (Partial)",
+        outcome: "partial",
+        explanation:
+          "Scammers forge convincing fake FIR documents and court seals when challenged for case dockets.",
+        rule: "File reports directly on cybercrime.gov.in instead of communicating with unsolicited recovery emails.",
+        cluesUncovered: ["Requested documentation from fraudulent recovery cell"],
       },
     },
   },
@@ -934,28 +1184,31 @@ export const scamChallenges = [
       },
       availableActions: [
         {
+          id: "act_sim_pay_electricity",
+          label: "Call Electricity Officer Number & Read OTP to Bank Caller to Avoid Disconnection & Charges",
+          evaluationKey: "sim_fell_for_scams",
+        },
+        {
           id: "act_sim_scam_triage",
           label: "Execute Full Triage: Block SMS 1 & SMS 2, Reject Fraud Call OTP Request, Approve Boss Email & Enter Amazon OTP on Laptop",
-          variant: "primary",
           evaluationKey: "sim_scam_master_triage",
         },
         {
           id: "act_sim_reject_everything",
-          label: "Block Everything (Including Genuine Amazon Login and Boss Email)",
-          variant: "secondary",
+          label: "Block Everything (Including Genuine Amazon Login and Boss Email) out of Extreme Caution",
           evaluationKey: "sim_reject_all",
         },
         {
-          id: "act_sim_pay_electricity",
-          label: "Call the Electricity Number & Read the OTP to the Bank Caller to Avoid Penalties",
-          variant: "danger",
-          evaluationKey: "sim_fell_for_scams",
+          id: "act_sim_verify_electricity_call",
+          label: "Call Discom Officer on Personal Mobile to Ask if Bill Can Be Paid Tomorrow",
+          evaluationKey: "sim_called_discom_mule",
         },
       ],
     },
     evaluation: {
       sim_scam_master_triage: { outcome: "correct", score: 100, xp: 200, lifeLost: false, key: "sim_scam_master_triage" },
       sim_reject_all: { outcome: "partial", score: 50, xp: 60, lifeLost: false, key: "sim_reject_all" },
+      sim_called_discom_mule: { outcome: "partial", score: 40, xp: 40, lifeLost: false, key: "sim_called_discom_mule" },
       sim_fell_for_scams: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "sim_fell_for_scams" },
     },
     feedback: {
@@ -979,6 +1232,14 @@ export const scamChallenges = [
           "You avoided scams, but blocked your own legitimate Amazon login and work email. The goal is accurate discernment, not universal obstruction.",
         rule: "Differentiate between user-initiated legitimate actions and unsolicited threats.",
         cluesUncovered: ["Over-blocked legitimate personal and work tasks"],
+      },
+      sim_called_discom_mule: {
+        title: "Contacted Scam Syndicate (Partial)",
+        outcome: "partial",
+        explanation:
+          "Calling personal numbers in utility SMS alerts connects you with trained call center operators who impersonate power grid engineers.",
+        rule: "Always verify bills via official utility provider websites.",
+        cluesUncovered: ["Connected with utility scam phone line"],
       },
       sim_fell_for_scams: {
         title: "MULTIPLE SCAM BREACHES INCURRED!",

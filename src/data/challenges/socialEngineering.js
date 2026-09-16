@@ -52,22 +52,32 @@ export const socialEngineeringChallenges = [
       ],
       availableActions: [
         {
+          id: "act_buy_gift_cards",
+          label: "Rush to Buy INR 50,000 in Gift Cards to Impress the COO and Avoid Delaying the Meeting",
+          evaluationKey: "buy_ceo_gift_cards",
+        },
+        {
+          id: "act_ask_for_signed_po",
+          label: "Ask the COO Over Chat to Provide a Signed Purchase Requisition Form First",
+          evaluationKey: "ask_po_in_chat_trap",
+        },
+        {
           id: "act_refuse_ceo_fraud",
           label: "Refuse & Report Account: Executives do not request personal gift card purchases via chat",
-          variant: "primary",
           evaluationKey: "refuse_ceo_gift_cards",
         },
         {
-          id: "act_buy_gift_cards",
-          label: "Rush to Buy INR 50,000 in Gift Cards to Impress the COO",
-          variant: "danger",
-          evaluationKey: "buy_ceo_gift_cards",
+          id: "act_buy_one_card_test",
+          label: "Purchase 1 Gift Card (INR 10,000) First as a Test Sample to Verify Reimbursement",
+          evaluationKey: "buy_partial_gift_card_trap",
         },
       ],
     },
     evaluation: {
       refuse_ceo_gift_cards: { outcome: "correct", score: 100, xp: 100, lifeLost: false, key: "refuse_ceo_gift_cards" },
       buy_ceo_gift_cards: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "buy_ceo_gift_cards" },
+      ask_po_in_chat_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "ask_po_in_chat_trap" },
+      buy_partial_gift_card_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "buy_partial_gift_card_trap" },
     },
     feedback: {
       refuse_ceo_gift_cards: {
@@ -88,6 +98,22 @@ export const socialEngineeringChallenges = [
           "The attacker redeemed the codes instantly. The real COO was never in touch with you.",
         rule: "Always follow formal procurement policies; never buy gift cards for supposed managers.",
         cluesUncovered: ["Yielded to fake executive authority"],
+      },
+      ask_po_in_chat_trap: {
+        title: "Engaged with Impostor Account!",
+        outcome: "wrong",
+        explanation:
+          "The scammer sent a forged PDF invoice with the COO's signature, increasing pressure to buy the cards.",
+        rule: "Do not negotiate procurement with external guest accounts on chat.",
+        cluesUncovered: ["Continued dialogue with spoofed COO account"],
+      },
+      buy_partial_gift_card_trap: {
+        title: "INR 10,000 Lost to Attacker!",
+        outcome: "wrong",
+        explanation:
+          "The attacker redeemed the single code immediately and demanded the remaining 4 cards.",
+        rule: "Never purchase gift cards on personal funds for company business.",
+        cluesUncovered: ["Surrendered partial gift card value"],
       },
     },
   },
@@ -126,22 +152,32 @@ export const socialEngineeringChallenges = [
       ],
       availableActions: [
         {
+          id: "act_share_aadhaar_otp",
+          label: "Send 12-Digit Aadhaar Number and Received OTP Immediately to Prevent Disconnection",
+          evaluationKey: "share_aadhaar_kyc",
+        },
+        {
+          id: "act_send_aadhaar_no_otp",
+          label: "Send Only the 12-Digit Aadhaar Number but Withhold the OTP",
+          evaluationKey: "share_aadhaar_only_trap",
+        },
+        {
           id: "act_block_fake_kyc",
           label: "Block Number & Ignore False Ultimatum; Check Telecom Status via Official Operator App",
-          variant: "primary",
           evaluationKey: "block_fake_telecom_kyc",
         },
         {
-          id: "act_share_aadhaar_otp",
-          label: "Send Aadhaar Number and OTP to Prevent SIM Disconnection",
-          variant: "danger",
-          evaluationKey: "share_aadhaar_kyc",
+          id: "act_call_whatsapp_officer",
+          label: "Call the WhatsApp Number to Request a 24-Hour Extension on the Deactivation",
+          evaluationKey: "call_kyc_scammer_trap",
         },
       ],
     },
     evaluation: {
       block_fake_telecom_kyc: { outcome: "correct", score: 100, xp: 110, lifeLost: false, key: "block_fake_telecom_kyc" },
       share_aadhaar_kyc: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "share_aadhaar_kyc" },
+      share_aadhaar_only_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "share_aadhaar_only_trap" },
+      call_kyc_scammer_trap: { outcome: "partial", score: 40, xp: 40, lifeLost: false, key: "call_kyc_scammer_trap" },
     },
     feedback: {
       block_fake_telecom_kyc: {
@@ -162,6 +198,22 @@ export const socialEngineeringChallenges = [
           "You sent your Aadhaar OTP. The attacker executed a fraudulent SIM swap and intercepted your banking messages.",
         rule: "Never share identity documents or OTPs on chat apps.",
         cluesUncovered: ["Surrendered identity credentials under urgency pressure"],
+      },
+      share_aadhaar_only_trap: {
+        title: "Personal Identifier Leaked!",
+        outcome: "wrong",
+        explanation:
+          "Disclosing your 12-digit Aadhaar number allows scammers to target you with customized vishing and SIM-swap authentication attempts.",
+        rule: "Do not disclose national identity numbers to unknown chat senders.",
+        cluesUncovered: ["Leaked Aadhaar number to untrusted contact"],
+      },
+      call_kyc_scammer_trap: {
+        title: "Negotiated with Impostor (Partial)",
+        outcome: "partial",
+        explanation:
+          "Calling the scammer gave them a chance to play pre-recorded government IVR messages and build trust.",
+        rule: "Do not call back numbers associated with unsolicited disconnection threats.",
+        cluesUncovered: ["Initiated voice call with extortion syndicate"],
       },
     },
   },
@@ -205,22 +257,32 @@ export const socialEngineeringChallenges = [
       ],
       availableActions: [
         {
+          id: "act_share_test_creds",
+          label: "Share Staging VPN Gateway & Test Login to Help a Fellow Alumnus",
+          evaluationKey: "share_staging_creds",
+        },
+        {
+          id: "act_share_ip_only",
+          label: "Share Only the Internal Staging Gateway IP While Keeping Password Secret",
+          evaluationKey: "share_ip_recon_trap",
+        },
+        {
           id: "act_refuse_staging_creds",
-          label: "Politely Decline & Report Account: 'Company policy prohibits sharing internal staging credentials'",
-          variant: "primary",
+          label: "Politely Decline & Report Account: 'Company policy strictly prohibits sharing internal staging credentials'",
           evaluationKey: "refuse_alumni_creds",
         },
         {
-          id: "act_share_test_creds",
-          label: "Share Staging VPN Gateway & Test Login to Help a Fellow Alumnus",
-          variant: "danger",
-          evaluationKey: "share_staging_creds",
+          id: "act_ask_corp_email",
+          label: "Ask Sameer to Email from His Corporate Address Before Sharing Access",
+          evaluationKey: "ask_corp_email_trap",
         },
       ],
     },
     evaluation: {
       refuse_alumni_creds: { outcome: "correct", score: 100, xp: 120, lifeLost: false, key: "refuse_alumni_creds" },
       share_staging_creds: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "share_staging_creds" },
+      share_ip_recon_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "share_ip_recon_trap" },
+      ask_corp_email_trap: { outcome: "partial", score: 40, xp: 40, lifeLost: false, key: "ask_corp_email_trap" },
     },
     feedback: {
       refuse_alumni_creds: {
@@ -241,6 +303,22 @@ export const socialEngineeringChallenges = [
           "The account was an impostor profile. They used your staging credentials to discover vulnerabilities in the internal API.",
         rule: "Internal credentials must never leave company boundaries.",
         cluesUncovered: ["Surrendered network credentials for fake friend"],
+      },
+      share_ip_recon_trap: {
+        title: "Internal Network Reconnaissance Leaked!",
+        outcome: "wrong",
+        explanation:
+          "Providing the internal VPN gateway IP gives attackers the exact target needed for distributed denial-of-service and port scanning campaigns.",
+        rule: "Internal architecture and IP ranges are confidential.",
+        cluesUncovered: ["Disclosed internal infrastructure addressing"],
+      },
+      ask_corp_email_trap: {
+        title: "Ambiguous Policy Enforcement (Partial)",
+        outcome: "partial",
+        explanation:
+          "Even if sent from a corporate email, internal infrastructure access cannot be shared with third parties without formal NDA and procurement approval.",
+        rule: "Corporate email alone does not grant third parties access to internal environments.",
+        cluesUncovered: ["Improper access delegation path"],
       },
     },
   },
@@ -285,22 +363,32 @@ export const socialEngineeringChallenges = [
       ],
       availableActions: [
         {
+          id: "act_grant_temp_token",
+          label: "Generate Temporary Staging Token to Repay the Helpful Script Favor",
+          evaluationKey: "grant_reciprocity_token",
+        },
+        {
           id: "act_thank_refuse_token",
           label: "Thank for the Public Tip, but Firmly Refuse API Token: 'Company tokens cannot be shared under any circumstances'",
-          variant: "primary",
           evaluationKey: "refuse_reciprocity_token",
         },
         {
-          id: "act_grant_temp_token",
-          label: "Generate Temporary Staging Token to Repay the Helpful Favor",
-          variant: "danger",
-          evaluationKey: "grant_reciprocity_token",
+          id: "act_screenshare_dashboard",
+          label: "Offer to Screen-Share the Internal Staging Dashboard Over Discord Video Call",
+          evaluationKey: "screenshare_leak_trap",
+        },
+        {
+          id: "act_create_dummy_local_token",
+          label: "Send a Personal Machine Dummy Token to Satisfy the Request Without Cloud Access",
+          evaluationKey: "dummy_token_trap",
         },
       ],
     },
     evaluation: {
       refuse_reciprocity_token: { outcome: "correct", score: 100, xp: 130, lifeLost: false, key: "refuse_reciprocity_token" },
       grant_reciprocity_token: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "grant_reciprocity_token" },
+      screenshare_leak_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "screenshare_leak_trap" },
+      dummy_token_trap: { outcome: "partial", score: 50, xp: 50, lifeLost: false, key: "dummy_token_trap" },
     },
     feedback: {
       refuse_reciprocity_token: {
@@ -321,6 +409,22 @@ export const socialEngineeringChallenges = [
           "The 'helpful contractor' was an adversary targeting your company. They used the API token to exfiltrate internal configuration maps.",
         rule: "No favor justifies sharing authentication keys.",
         cluesUncovered: ["Yielded to reciprocity psychological pressure"],
+      },
+      screenshare_leak_trap: {
+        title: "Internal Infrastructure Exposed via Video!",
+        outcome: "wrong",
+        explanation:
+          "Screen sharing displayed internal cluster endpoints, secret names, and staging DNS records, aiding the attacker's reconnaissance.",
+        rule: "Never screen-share internal systems with unvetted community members.",
+        cluesUncovered: ["Exposed internal systems on public video stream"],
+      },
+      dummy_token_trap: {
+        title: "Unnecessary Technical Engagement (Partial)",
+        outcome: "partial",
+        explanation:
+          "Generating dummy tokens avoided leaking real secrets, but maintaining dialogue with an attacker probing for access invites prolonged targeting.",
+        rule: "Clearly communicate policy boundaries without fabricating mock tokens.",
+        cluesUncovered: ["Engaged in mock credential generation"],
       },
     },
   },
@@ -359,22 +463,32 @@ export const socialEngineeringChallenges = [
       ],
       availableActions: [
         {
+          id: "act_export_secret_data",
+          label: "Export and Upload Database to Dropbox to Comply with the Confidential NDA",
+          evaluationKey: "export_secret_data",
+        },
+        {
+          id: "act_ask_director_nda_doc",
+          label: "Ask the Director to Send a Formal NDA PDF to Sign Before Uploading the Dump",
+          evaluationKey: "request_nda_trap",
+        },
+        {
           id: "act_report_to_manager",
           label: "Refuse Export & Immediately Inform Your Manager Pooja and Corporate Security",
-          variant: "primary",
           evaluationKey: "report_secrecy_trap",
         },
         {
-          id: "act_export_secret_data",
-          label: "Export and Upload the Database to Comply with the Confidential NDA",
-          variant: "danger",
-          evaluationKey: "export_secret_data",
+          id: "act_export_redacted_sample",
+          label: "Upload a Redacted 100-Row Sample of Customer Data to Meet in the Middle",
+          evaluationKey: "export_sample_trap",
         },
       ],
     },
     evaluation: {
       report_secrecy_trap: { outcome: "correct", score: 100, xp: 140, lifeLost: false, key: "report_secrecy_trap" },
       export_secret_data: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "export_secret_data" },
+      request_nda_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "request_nda_trap" },
+      export_sample_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "export_sample_trap" },
     },
     feedback: {
       report_secrecy_trap: {
@@ -395,6 +509,22 @@ export const socialEngineeringChallenges = [
           "You uploaded confidential customer records to an attacker's Dropbox folder. A massive regulatory GDPR/DPDP breach resulted.",
         rule: "Never bypass established data governance protocols.",
         cluesUncovered: ["Allowed attacker to isolate you from team oversight"],
+      },
+      request_nda_trap: {
+        title: "Fooled by Bogus Legal Documents!",
+        outcome: "wrong",
+        explanation:
+          "The scammer sent a forged legal agreement on spoofed letterhead to legitimize the theft of customer records.",
+        rule: "Legal forms cannot authorize transfers to unvetted external storage.",
+        cluesUncovered: ["Trusted forged NDA documentation"],
+      },
+      export_sample_trap: {
+        title: "Customer Records Leaked!",
+        outcome: "wrong",
+        explanation:
+          "Even 100 records contain PII (names, emails, phone numbers) constituting a reportable privacy violation.",
+        rule: "Never share sample production data on external unvetted channels.",
+        cluesUncovered: ["Exfiltrated sample customer records"],
       },
     },
   },
@@ -429,16 +559,22 @@ export const socialEngineeringChallenges = [
           ],
           availableActions: [
             {
+              id: "act_bypass_firewall",
+              label: "Immediately Open Port 22 for the IP to Stop the Financial Loss",
+              type: "advance",
+              nextStep: "step_2_firewall_breach",
+            },
+            {
               id: "act_verify_bridge_call",
               label: "Tell Caller You Will Join the Active Production Incident Bridge to Verify Before Executing",
               type: "advance",
               nextStep: "step_2_verify_bridge",
             },
             {
-              id: "act_bypass_firewall",
-              label: "Immediately Open Port 22 for the IP to Stop the Financial Loss",
+              id: "act_open_firewall_temp_5min",
+              label: "Open Port 22 for Exactly 5 Minutes with an Automatic Revert Timer",
               type: "advance",
-              nextStep: "step_2_firewall_breach",
+              nextStep: "step_2_timed_breach",
             },
           ],
         },
@@ -458,9 +594,29 @@ export const socialEngineeringChallenges = [
           availableActions: [
             {
               id: "act_finish_dual_vector",
-              label: "Report Vishing Backdoor Attempt to Security",
-              variant: "primary",
+              label: "Report Vishing Backdoor Attempt to Security Operations",
               evaluationKey: "dual_pressure_defended",
+            },
+          ],
+        },
+        {
+          id: "step_2_timed_breach",
+          stepNumber: 2,
+          contextTitle: "Automated Attack Script Executed",
+          dialogue: [
+            {
+              sender: "Security Information & Event Management (SIEM)",
+              role: "system",
+              timestamp: "05:51 PM",
+              text: "Automated exploit payload uploaded within 14 seconds of Port 22 opening. Root backdoor installed.",
+            },
+          ],
+          inspectableClues: ["Automated scripts exploit open ports in seconds."],
+          availableActions: [
+            {
+              id: "act_fail_timed_backdoor",
+              label: "Acknowledge Critical Infrastructure Compromise",
+              evaluationKey: "dual_pressure_timed_failed",
             },
           ],
         },
@@ -480,8 +636,7 @@ export const socialEngineeringChallenges = [
           availableActions: [
             {
               id: "act_fail_backdoor",
-              label: "Acknowledge Incident",
-              variant: "danger",
+              label: "Acknowledge Incident & Trigger Incident Response",
               evaluationKey: "dual_pressure_failed",
             },
           ],
@@ -490,6 +645,7 @@ export const socialEngineeringChallenges = [
     },
     evaluation: {
       dual_pressure_defended: { outcome: "correct", score: 100, xp: 150, lifeLost: false, key: "dual_pressure_defended" },
+      dual_pressure_timed_failed: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "dual_pressure_timed_failed" },
       dual_pressure_failed: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "dual_pressure_failed" },
     },
     feedback: {
@@ -503,6 +659,14 @@ export const socialEngineeringChallenges = [
           "Maintained protocol discipline during simulated crisis",
           "Cross-verified on active incident bridge",
         ],
+      },
+      dual_pressure_timed_failed: {
+        title: "Automated Scripts Exploited Open Port!",
+        outcome: "wrong",
+        explanation:
+          "Attack bots execute payloads in milliseconds. Even a 5-minute temporary rule is sufficient to compromise server roots.",
+        rule: "Temporary firewall holes provide full attack windows.",
+        cluesUncovered: ["Attempted unsafe temporary firewall compromise"],
       },
       dual_pressure_failed: {
         title: "Production Firewall Compromised!",
@@ -545,16 +709,22 @@ export const socialEngineeringChallenges = [
           ],
           availableActions: [
             {
+              id: "act_text_bypass_code",
+              label: "Immediately Text Emergency Bypass Code Because the Voice Sounded Real",
+              type: "advance",
+              nextStep: "step_2_voice_compromised",
+            },
+            {
               id: "act_challenge_shared_secret",
-              label: "Ask a Pre-Agreed Verification Question / Callback on CEO's Official Direct Line",
+              label: "Ask a Pre-Agreed Verification Question / Callback on Executive Direct Line",
               type: "advance",
               nextStep: "step_2_voice_verify",
             },
             {
-              id: "act_text_bypass_code",
-              label: "Immediately Text the Emergency Bypass Code Because the Voice Sounded Real",
+              id: "act_ask_emp_id",
+              label: "Ask the Caller to Recite Their Employee ID Number Over the Phone",
               type: "advance",
-              nextStep: "step_2_voice_compromised",
+              nextStep: "step_2_emp_id_trick",
             },
           ],
         },
@@ -575,8 +745,28 @@ export const socialEngineeringChallenges = [
             {
               id: "act_finish_voice_audit",
               label: "Log AI Voice Clone Threat to Cyber Intelligence",
-              variant: "primary",
               evaluationKey: "voice_clone_defended",
+            },
+          ],
+        },
+        {
+          id: "step_2_emp_id_trick",
+          stepNumber: 2,
+          contextTitle: "Public Information Recited",
+          dialogue: [
+            {
+              sender: "Caller",
+              role: "phone_call",
+              timestamp: "11:01 AM",
+              text: "Caller smoothly answers: 'My employee ID is EMP-001, listed on all company filings. Send the bypass code now!'",
+            },
+          ],
+          inspectableClues: ["Public employee identifiers fail to prove caller identity."],
+          availableActions: [
+            {
+              id: "act_call_ea_after_id",
+              label: "Verify Out-of-Band with Executive Assistant Despite Correct ID",
+              evaluationKey: "voice_clone_id_verified",
             },
           ],
         },
@@ -596,8 +786,7 @@ export const socialEngineeringChallenges = [
           availableActions: [
             {
               id: "act_fail_voice",
-              label: "Acknowledge Compromise",
-              variant: "danger",
+              label: "Acknowledge Executive Account Compromise",
               evaluationKey: "voice_clone_failed",
             },
           ],
@@ -606,6 +795,7 @@ export const socialEngineeringChallenges = [
     },
     evaluation: {
       voice_clone_defended: { outcome: "correct", score: 100, xp: 160, lifeLost: false, key: "voice_clone_defended" },
+      voice_clone_id_verified: { outcome: "partial", score: 70, xp: 80, lifeLost: false, key: "voice_clone_id_verified" },
       voice_clone_failed: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "voice_clone_failed" },
     },
     feedback: {
@@ -619,6 +809,14 @@ export const socialEngineeringChallenges = [
           "Recognized deepfake voice cloning indicators",
           "Used independent verification channel to confirm CEO location",
         ],
+      },
+      voice_clone_id_verified: {
+        title: "Deepfake Defeated After Ineffective ID Check (Partial)",
+        outcome: "partial",
+        explanation:
+          "You eventually called the executive assistant, but asking for employee IDs is useless since corporate filings and press releases list executive IDs publicly.",
+        rule: "Use pre-shared secret challenges or authoritative callback lines rather than public metadata.",
+        cluesUncovered: ["Relying on public employee ID metadata"],
       },
       voice_clone_failed: {
         title: "Executive Account Hijacked via Deepfake!",
@@ -704,16 +902,19 @@ export const socialEngineeringChallenges = [
           ],
           availableActions: [
             {
+              id: "act_run_sql_dump",
+              label: "Execute SQL Query and Send Customer Dump to Manish Since He Has Been Friendly All Week",
+              evaluationKey: "foot_in_door_failed",
+            },
+            {
               id: "act_firmly_reject_sql",
               label: "Firmly Refuse SQL Query: 'Production database dumps require Data Protection Officer approval and cannot be executed on chat requests'",
-              variant: "primary",
               evaluationKey: "foot_in_door_defended",
             },
             {
-              id: "act_run_sql_dump",
-              label: "Execute the SQL Query and Send the Customer Dump to Manish",
-              variant: "danger",
-              evaluationKey: "foot_in_door_failed",
+              id: "act_export_to_internal_folder",
+              label: "Run Query but Save Output to an Internal Staging Server Path Instead of Chat",
+              evaluationKey: "foot_in_door_internal_dump_trap",
             },
           ],
         },
@@ -722,6 +923,7 @@ export const socialEngineeringChallenges = [
     evaluation: {
       foot_in_door_defended: { outcome: "correct", score: 100, xp: 170, lifeLost: false, key: "foot_in_door_defended" },
       foot_in_door_failed: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "foot_in_door_failed" },
+      foot_in_door_internal_dump_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "foot_in_door_internal_dump_trap" },
     },
     feedback: {
       foot_in_door_defended: {
@@ -742,6 +944,14 @@ export const socialEngineeringChallenges = [
           "The attacker groomed you all week specifically to extract that production database dump.",
         rule: "Never bypass data extraction controls out of social politeness.",
         cluesUncovered: ["Fell for foot-in-the-door trust escalation"],
+      },
+      foot_in_door_internal_dump_trap: {
+        title: "Unauthorized Production Dump Created!",
+        outcome: "wrong",
+        explanation:
+          "Dumping unencrypted production PII onto staging folders violates privacy compliance and creates accessible targets for lateral movement.",
+        rule: "Do not execute unapproved production database extraction queries.",
+        cluesUncovered: ["Created unencrypted production database dump"],
       },
     },
   },
@@ -776,16 +986,22 @@ export const socialEngineeringChallenges = [
           ],
           availableActions: [
             {
-              id: "act_escalate_ciso_desk",
-              label: "Refuse Private Key Export; Escort Deepak to the Chief Information Security Officer (CISO) Desk for Verification",
-              type: "advance",
-              nextStep: "step_2_audit_verify",
-            },
-            {
               id: "act_export_private_keys",
-              label: "Export ~/.ssh Keys to the Auditor's USB Drive for Audit Compliance",
+              label: "Export ~/.ssh Keys to Auditor's USB Drive for Audit Compliance",
               type: "advance",
               nextStep: "step_2_audit_breach",
+            },
+            {
+              id: "act_export_public_only",
+              label: "Export Public Key and Bash History but Keep Private Key on Workstation",
+              type: "advance",
+              nextStep: "step_2_partial_leak",
+            },
+            {
+              id: "act_escalate_ciso_desk",
+              label: "Refuse Private Key Export; Escort Deepak to Chief Information Security Officer (CISO) Desk for Verification",
+              type: "advance",
+              nextStep: "step_2_audit_verify",
             },
           ],
         },
@@ -805,9 +1021,29 @@ export const socialEngineeringChallenges = [
           availableActions: [
             {
               id: "act_finish_audit_test",
-              label: "Complete Red-Team Defense",
-              variant: "primary",
+              label: "Complete Red-Team Defense Protocol",
               evaluationKey: "auditor_pretext_defended",
+            },
+          ],
+        },
+        {
+          id: "step_2_partial_leak",
+          stepNumber: 2,
+          contextTitle: "Bash History Inspected",
+          dialogue: [
+            {
+              sender: "Red Team Assessment Report",
+              role: "system",
+              timestamp: "02:08 PM",
+              text: "PARTIAL BREACH: Bash history contained cleartext AWS access keys in environment export commands.",
+            },
+          ],
+          inspectableClues: ["Surrendered sensitive command logs to unverified visitor."],
+          availableActions: [
+            {
+              id: "act_fail_partial_audit",
+              label: "Acknowledge Security Policy Deviation",
+              evaluationKey: "auditor_pretext_partial_leak",
             },
           ],
         },
@@ -827,8 +1063,7 @@ export const socialEngineeringChallenges = [
           availableActions: [
             {
               id: "act_fail_audit",
-              label: "Acknowledge Failure",
-              variant: "danger",
+              label: "Acknowledge Audit Compliance Failure",
               evaluationKey: "auditor_pretext_failed",
             },
           ],
@@ -837,6 +1072,7 @@ export const socialEngineeringChallenges = [
     },
     evaluation: {
       auditor_pretext_defended: { outcome: "correct", score: 100, xp: 180, lifeLost: false, key: "auditor_pretext_defended" },
+      auditor_pretext_partial_leak: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "auditor_pretext_partial_leak" },
       auditor_pretext_failed: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "auditor_pretext_failed" },
     },
     feedback: {
@@ -850,6 +1086,14 @@ export const socialEngineeringChallenges = [
           "Identified impossible private key audit request",
           "Escorted visitor to CISO for formal validation",
         ],
+      },
+      auditor_pretext_partial_leak: {
+        title: "Command History Leaked Sensitive Secrets!",
+        outcome: "wrong",
+        explanation:
+          "Surrendering raw shell histories to unverified visitors exposes embedded environment secrets, API tokens, and internal server endpoints.",
+        rule: "Never export system files or shell history without formal escort authorization.",
+        cluesUncovered: ["Leaked shell history containing credentials"],
       },
       auditor_pretext_failed: {
         title: "Private Cryptographic Keys Surrendered!",
@@ -978,21 +1222,23 @@ export const socialEngineeringChallenges = [
       },
       availableActions: [
         {
-          id: "act_sim_social_triage",
-          label: "Terminate Chat, Refuse Token, Document Conversation & Escalate Impersonation Attack to SOC & Manager Pooja",
-          variant: "primary",
-          evaluationKey: "sim_social_triage_master",
-        },
-        {
           id: "act_sim_send_token",
           label: "Send the Emergency Bypass Token to Help Neha Deploy the Urgent Hotfix",
-          variant: "danger",
           evaluationKey: "sim_social_token_leak",
+        },
+        {
+          id: "act_sim_call_voip_back",
+          label: "Call the Unregistered VoIP Number Back to Ask Why She is Not Using Her Company Phone",
+          evaluationKey: "sim_social_call_voip_trap",
+        },
+        {
+          id: "act_sim_social_triage",
+          label: "Terminate Chat, Refuse Token, Document Conversation & Escalate Impersonation Attack to SOC & Manager Pooja",
+          evaluationKey: "sim_social_triage_master",
         },
         {
           id: "act_sim_ignore_chat",
           label: "Simply Close Chat Window Without Alerting SOC or Updating Incident Record",
-          variant: "secondary",
           evaluationKey: "sim_social_unreported",
         },
       ],
@@ -1000,6 +1246,7 @@ export const socialEngineeringChallenges = [
     evaluation: {
       sim_social_triage_master: { outcome: "correct", score: 100, xp: 200, lifeLost: false, key: "sim_social_triage_master" },
       sim_social_token_leak: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "sim_social_token_leak" },
+      sim_social_call_voip_trap: { outcome: "partial", score: 40, xp: 40, lifeLost: false, key: "sim_social_call_voip_trap" },
       sim_social_unreported: { outcome: "partial", score: 50, xp: 70, lifeLost: false, key: "sim_social_unreported" },
     },
     feedback: {
@@ -1023,6 +1270,14 @@ export const socialEngineeringChallenges = [
           "You sent the bypass token to an impostor. The attacker gained root administrative access and compromised the entire production environment.",
         rule: "Never bypass authentication controls for informal chat requests.",
         cluesUncovered: ["Surrendered administrative tokens under social pressure"],
+      },
+      sim_social_call_voip_trap: {
+        title: "Engaged with Attacker's VoIP (Partial)",
+        outcome: "partial",
+        explanation:
+          "Calling the spoofed VoIP number exposed you to deepfake voice actors and social engineering scripts.",
+        rule: "Always contact the verified phone number listed in the official HR employee directory.",
+        cluesUncovered: ["Called attacker's unvetted VoIP line"],
       },
       sim_social_unreported: {
         title: "PARTIAL SUCCESS (UNREPORTED THREAT)",

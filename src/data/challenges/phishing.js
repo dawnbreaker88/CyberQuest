@@ -27,7 +27,7 @@ export const phishingChallenges = [
       recipient: "arjun.verma@bharat-techcorp.test",
       subject: "URGENT: Corporate SSO Password Expiring in 2 Hours",
       timestamp: "Today at 09:14 AM",
-      urgency: "Mandatory Deadline: 2 Hours",
+      urgency: "Deadline: 2 Hours",
       bodyHtml: `
         <p>Namaste Arjun,</p>
         <p>Our centralized IT directory detected that your <strong>single sign-on (SSO) login expires today</strong>.</p>
@@ -65,28 +65,31 @@ export const phishingChallenges = [
       ],
       availableActions: [
         {
+          id: "action_reply",
+          label: "Reply to sender asking for an extension before renewing",
+          evaluationKey: "reply_sender",
+        },
+        {
+          id: "action_preview",
+          label: "Open the link in a private window to check if the login form is real",
+          evaluationKey: "click_link",
+        },
+        {
           id: "action_report",
-          label: "Report as Phishing Incident",
-          variant: "primary",
+          label: "Report email as phishing incident and navigate to SSO via official bookmark",
           evaluationKey: "report_phishing",
         },
         {
           id: "action_delete",
-          label: "Delete Email",
-          variant: "secondary",
+          label: "Delete the notification from your inbox without reporting",
           evaluationKey: "delete_email",
-        },
-        {
-          id: "action_click",
-          label: "Click Link to Renew Password",
-          variant: "danger",
-          evaluationKey: "click_link",
         },
       ],
     },
     evaluation: {
       report_phishing: { outcome: "correct", score: 100, xp: 100, lifeLost: false, key: "report_phishing" },
       delete_email: { outcome: "partial", score: 50, xp: 50, lifeLost: false, key: "delete_email" },
+      reply_sender: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "reply_sender" },
       click_link: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "click_link" },
     },
     feedback: {
@@ -104,10 +107,17 @@ export const phishingChallenges = [
         rule: "Always report phishing to security operations so colleagues are safeguarded.",
         cluesUncovered: ["Avoided malicious link", "Missed organizational alerting opportunity"],
       },
+      reply_sender: {
+        title: "In-Band Communication Trap",
+        outcome: "wrong",
+        explanation: "Replying to a spoofed address confirms your email is active and engages directly with the attacker.",
+        rule: "Never reply to suspicious emails; communicate only through verified official channels.",
+        cluesUncovered: ["Engaged directly with attacker inbox"],
+      },
       click_link: {
         title: "Credentials Stolen!",
         outcome: "wrong",
-        explanation: "You clicked the fake SSO portal link. The attacker recorded your corporate credentials and MFA session token.",
+        explanation: "You clicked the fake SSO portal link. Private windows protect cookies, but do not prevent credential harvesters from recording keystrokes.",
         rule: "Never click password renewal links sent via unexpected high-urgency emails.",
         cluesUncovered: ["Fell for 2-hour urgency lever", "Failed to inspect destination URL before clicking"],
       },
@@ -164,15 +174,17 @@ export const phishingChallenges = [
         },
       ],
       availableActions: [
-        { id: "act_report_url", label: "Close Tab & Report Phishing URL", variant: "primary", evaluationKey: "close_report" },
-        { id: "act_leave", label: "Close Tab Without Reporting", variant: "secondary", evaluationKey: "leave_site" },
-        { id: "act_submit", label: "Enter Password & Continue", variant: "danger", evaluationKey: "submit_creds" },
+        { id: "act_trust_ssl", label: "Verify HTTPS certificate lock and proceed to sign in", evaluationKey: "submit_creds" },
+        { id: "act_report_url", label: "Close tab and report lookalike domain to security", evaluationKey: "close_report" },
+        { id: "act_leave", label: "Close tab without submitting credentials or reporting", evaluationKey: "leave_site" },
+        { id: "act_subdomain_trust", label: "Continue because the URL starts with accounts.google.com", evaluationKey: "subdomain_trust" },
       ],
     },
     evaluation: {
       close_report: { outcome: "correct", score: 100, xp: 110, lifeLost: false, key: "close_report" },
       leave_site: { outcome: "partial", score: 50, xp: 55, lifeLost: false, key: "leave_site" },
       submit_creds: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "submit_creds" },
+      subdomain_trust: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "subdomain_trust" },
     },
     feedback: {
       close_report: {
@@ -194,7 +206,14 @@ export const phishingChallenges = [
         outcome: "wrong",
         explanation: "You submitted your password to a rogue server. The lock icon merely meant your password was encrypted while being stolen.",
         rule: "Never enter credentials into domains you haven't verified in the address bar.",
-        cluesUncovered: ["Fell for brand subdomain illusion", "Equated HTTPS lock with trustworthiness"],
+        cluesUncovered: ["Equated HTTPS lock with trustworthiness"],
+      },
+      subdomain_trust: {
+        title: "Subdomain Trap Triggered!",
+        outcome: "wrong",
+        explanation: "Anyone can name their subdomain 'accounts.google.com' on their own domain. Only the registered root domain determines identity.",
+        rule: "The root domain right before the first path slash is the real destination.",
+        cluesUncovered: ["Fell for brand subdomain disguise"],
       },
     },
   },
@@ -251,22 +270,24 @@ export const phishingChallenges = [
       ],
       availableActions: [
         {
-          id: "act_call_verify",
-          label: "Call Rohan via Registered Internal Extension / Phone to Verify",
-          variant: "primary",
-          evaluationKey: "call_verify",
-        },
-        {
-          id: "act_reply_deny",
-          label: "Reply by Email Denying Request",
-          variant: "secondary",
+          id: "act_reply_ticket",
+          label: "Reply to email asking Rohan for the Jira incident ticket number",
           evaluationKey: "reply_deny",
         },
         {
-          id: "act_approve_token",
-          label: "Click Link & Approve Token Request",
-          variant: "danger",
+          id: "act_call_verify",
+          label: "Call Rohan via registered internal phone directory to verify out-of-band",
+          evaluationKey: "call_verify",
+        },
+        {
+          id: "act_preview_link",
+          label: "Click link to preview what permissions the bypass token requires",
           evaluationKey: "approve_token",
+        },
+        {
+          id: "act_slack_share",
+          label: "Forward email to the team chat channel asking if someone else can authorize it",
+          evaluationKey: "slack_share",
         },
       ],
     },
@@ -274,6 +295,7 @@ export const phishingChallenges = [
       call_verify: { outcome: "correct", score: 100, xp: 120, lifeLost: false, key: "call_verify" },
       reply_deny: { outcome: "partial", score: 50, xp: 60, lifeLost: false, key: "reply_deny" },
       approve_token: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "approve_token" },
+      slack_share: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "slack_share" },
     },
     feedback: {
       call_verify: {
@@ -286,7 +308,7 @@ export const phishingChallenges = [
       reply_deny: {
         title: "In-Band Rejection (Partial)",
         outcome: "partial",
-        explanation: "Denying by email prevented compromise, but emailing the hijacked inbox only speaks with the hacker.",
+        explanation: "Denying by email prevented immediate compromise, but emailing the hijacked inbox only communicates with the intruder.",
         rule: "Alert internal SOC when legitimate accounts show signs of unauthorized takeover.",
         cluesUncovered: ["Avoided sharing credentials", "Missed incident escalation"],
       },
@@ -296,6 +318,13 @@ export const phishingChallenges = [
         explanation: "You approved a rogue session token! The attacker gained direct access into the internal network using your authorization.",
         rule: "Never share credentials or approve authentication prompts on behalf of others.",
         cluesUncovered: ["Blindly trusted familiar name", "Bypassed mandatory dual-factor policy"],
+      },
+      slack_share: {
+        title: "Breach Amplified!",
+        outcome: "wrong",
+        explanation: "Forwarding the malicious authorization prompt to public channels increased the risk of another teammate clicking it.",
+        rule: "Report suspicious requests directly to SOC instead of broadcasting them to coworkers.",
+        cluesUncovered: ["Broadcasted unverified token request"],
       },
     },
   },
@@ -350,15 +379,17 @@ export const phishingChallenges = [
         },
       ],
       availableActions: [
-        { id: "act_sandbox_report", label: "Quarantine & Report Malicious Attachment", variant: "primary", evaluationKey: "quarantine_report" },
-        { id: "act_save_disk", label: "Download to Downloads Folder", variant: "secondary", evaluationKey: "download_only" },
-        { id: "act_open_run", label: "Open Attachment & Run Form", variant: "danger", evaluationKey: "run_file" },
+        { id: "act_open_pdf", label: "Open the file since it displays a PDF document title", evaluationKey: "run_file" },
+        { id: "act_save_disk", label: "Download attachment to local drive and scan with antivirus", evaluationKey: "download_only" },
+        { id: "act_sandbox_report", label: "Quarantine and report the suspicious executable script attachment", evaluationKey: "quarantine_report" },
+        { id: "act_reply_text", label: "Reply requesting the grant details as inline plain text", evaluationKey: "reply_text" },
       ],
     },
     evaluation: {
       quarantine_report: { outcome: "correct", score: 100, xp: 130, lifeLost: false, key: "quarantine_report" },
       download_only: { outcome: "partial", score: 40, xp: 50, lifeLost: false, key: "download_only" },
       run_file: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "run_file" },
+      reply_text: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "reply_text" },
     },
     feedback: {
       quarantine_report: {
@@ -381,6 +412,13 @@ export const phishingChallenges = [
         explanation: "The script executed and installed an encrypted backdoor info-stealer into your operating system.",
         rule: "Never open files with executable extensions (.vbs, .exe, .scr, .bat) sent via email.",
         cluesUncovered: ["Fooled by double extension illusion", "Executed malicious script payload"],
+      },
+      reply_text: {
+        title: "Scam Confirmed (In-Band)",
+        outcome: "wrong",
+        explanation: "Replying engages with fraudsters who will send fake official letters to request bank account numbers directly.",
+        rule: "Unsolicited award emails with attachments should be reported directly to security.",
+        cluesUncovered: ["Engaged with scam operator"],
       },
     },
   },
@@ -427,15 +465,17 @@ export const phishingChallenges = [
         },
       ],
       availableActions: [
-        { id: "act_block_report", label: "Block Domain & Report Credential Harvester", variant: "primary", evaluationKey: "block_report" },
-        { id: "act_close_only", label: "Close Browser Tab", variant: "secondary", evaluationKey: "close_only" },
-        { id: "act_input_pass", label: "Submit Old and New Password", variant: "danger", evaluationKey: "submit_creds" },
+        { id: "act_input_pass", label: "Enter current password because the portal displays official company branding", evaluationKey: "submit_creds" },
+        { id: "act_test_dummy", label: "Enter a fake password first to test if the portal accepts invalid input", evaluationKey: "test_dummy" },
+        { id: "act_block_report", label: "Close tab and access the official Active Directory portal via corporate intranet", evaluationKey: "block_report" },
+        { id: "act_close_only", label: "Close browser tab without logging in or reporting", evaluationKey: "close_only" },
       ],
     },
     evaluation: {
       block_report: { outcome: "correct", score: 100, xp: 140, lifeLost: false, key: "block_report" },
       close_only: { outcome: "partial", score: 50, xp: 70, lifeLost: false, key: "close_only" },
       submit_creds: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "submit_creds" },
+      test_dummy: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "test_dummy" },
     },
     feedback: {
       block_report: {
@@ -458,6 +498,13 @@ export const phishingChallenges = [
         explanation: "By typing your current password, you handed the attacker complete access to your account and enterprise directory.",
         rule: "Never type current passwords into unverified domains.",
         cluesUncovered: ["Disclosed active corporate credentials"],
+      },
+      test_dummy: {
+        title: "Testing Phishing Sites is Risky!",
+        outcome: "wrong",
+        explanation: "Submitting dummy data often triggers redirect chains or malware downloads while confirming that a human is interacting with the page.",
+        rule: "Do not probe or test phishing sites; navigate away and report.",
+        cluesUncovered: ["Attempted active probing of malicious site"],
       },
     },
   },
@@ -514,15 +561,17 @@ export const phishingChallenges = [
         },
       ],
       availableActions: [
-        { id: "act_verify_procurement", label: "Flag for Procurement Review & Call Vendor on File", variant: "primary", evaluationKey: "verify_procurement" },
-        { id: "act_reply_confirm", label: "Reply Asking for Account Confirmation Letter", variant: "secondary", evaluationKey: "reply_inband" },
-        { id: "act_process_payment", label: "Forward to Accounts Payable for Payment", variant: "danger", evaluationKey: "pay_invoice" },
+        { id: "act_reply_confirm", label: "Reply directly to email asking for a stamped bank confirmation letter", evaluationKey: "reply_inband" },
+        { id: "act_verify_procurement", label: "Hold payment and call vendor on file using master contract contact number", evaluationKey: "verify_procurement" },
+        { id: "act_process_payment", label: "Forward to Accounts Payable to process payment before the 24h suspension", evaluationKey: "pay_invoice" },
+        { id: "act_partial_payment", label: "Authorize 25% partial payment to keep cluster alive while checking bank details", evaluationKey: "partial_payment" },
       ],
     },
     evaluation: {
       verify_procurement: { outcome: "correct", score: 100, xp: 150, lifeLost: false, key: "verify_procurement" },
       reply_inband: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "reply_inband" },
       pay_invoice: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "pay_invoice" },
+      partial_payment: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "partial_payment" },
     },
     feedback: {
       verify_procurement: {
@@ -545,6 +594,13 @@ export const phishingChallenges = [
         explanation: "You approved payment to an untraceable mule account. The funds cannot be recalled.",
         rule: "Never update vendor banking details without dual verification.",
         cluesUncovered: ["Transferred funds without out-of-band verification"],
+      },
+      partial_payment: {
+        title: "Partial Transfer Lost!",
+        outcome: "wrong",
+        explanation: "Even partial payments to fraudulent accounts cause direct financial loss.",
+        rule: "Never send any funds to unverified bank account changes.",
+        cluesUncovered: ["Attempted partial payment without verification"],
       },
     },
   },
@@ -613,13 +669,11 @@ export const phishingChallenges = [
             {
               id: "act_report_soc",
               label: "Report Email to Security Operations Center (SOC)",
-              variant: "primary",
               evaluationKey: "report_mixed_signals",
             },
             {
               id: "act_ignore",
               label: "Just Ignore and Take No Action",
-              variant: "secondary",
               evaluationKey: "ignore_only",
             },
           ],
@@ -643,7 +697,6 @@ export const phishingChallenges = [
             {
               id: "act_fail_submit",
               label: "Complete Process",
-              variant: "danger",
               evaluationKey: "submitted_credentials",
             },
           ],
@@ -744,7 +797,6 @@ export const phishingChallenges = [
             {
               id: "act_forward_sec",
               label: "Forward Complete Email Headers to Security Team",
-              variant: "primary",
               evaluationKey: "forward_security",
             },
           ],
@@ -766,7 +818,6 @@ export const phishingChallenges = [
             {
               id: "act_fail_duress",
               label: "Acknowledge Breach",
-              variant: "danger",
               evaluationKey: "fail_duress",
             },
           ],
@@ -827,21 +878,23 @@ export const phishingChallenges = [
       ],
       availableActions: [
         {
-          id: "act_contain_triage",
-          label: "Change Password Immediately, Terminate Active Sessions & Notify SOC",
-          variant: "primary",
-          evaluationKey: "contain_triage",
-        },
-        {
           id: "act_wait_see",
-          label: "Wait to See if Any Strange Activity Occurs on Account",
-          variant: "danger",
+          label: "Monitor email and authentication logs over the next 24 hours for unauthorized access notices",
           evaluationKey: "wait_and_see",
         },
         {
-          id: "act_shut_laptop",
-          label: "Simply Close Laptop and Hope the Server Didn't Save It",
-          variant: "danger",
+          id: "act_contain_triage",
+          label: "Change password immediately from an alternate system, terminate active sessions & notify SOC",
+          evaluationKey: "contain_triage",
+        },
+        {
+          id: "act_clear_cache",
+          label: "Clear browser cookies and local cache to wipe stored credential tokens",
+          evaluationKey: "clear_cache",
+        },
+        {
+          id: "act_scan_antivirus",
+          label: "Disconnect WiFi and run a local antivirus scan on the machine",
           evaluationKey: "shut_laptop",
         },
       ],
@@ -849,6 +902,7 @@ export const phishingChallenges = [
     evaluation: {
       contain_triage: { outcome: "correct", score: 100, xp: 180, lifeLost: false, key: "contain_triage" },
       wait_and_see: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "wait_and_see" },
+      clear_cache: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "clear_cache" },
       shut_laptop: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "shut_laptop" },
     },
     feedback: {
@@ -866,12 +920,19 @@ export const phishingChallenges = [
         rule: "Never wait after exposing credentials; assume compromise and reset immediately.",
         cluesUncovered: ["Allowed attacker persistence window"],
       },
-      shut_laptop: {
-        title: "Compromise Remained Active!",
+      clear_cache: {
+        title: "Credentials Remain Compromised!",
         outcome: "wrong",
-        explanation: "The credentials were saved on the attacker's server the moment you clicked submit; turning off your device changes nothing on the cloud.",
-        rule: "Reset credentials from a clean browser and inform security.",
-        cluesUncovered: ["Failed to take remediation actions"],
+        explanation: "Clearing local browser cache does nothing to protect credentials that have already been transmitted to the attacker's server.",
+        rule: "Server-side password resets and session terminations are required after credential exposure.",
+        cluesUncovered: ["Confused local browser cache with remote authentication tokens"],
+      },
+      shut_laptop: {
+        title: "Misdirected Triage",
+        outcome: "wrong",
+        explanation: "Scanning for local viruses does not protect against credentials submitted to a remote harvester.",
+        rule: "Focus first on account containment (password reset & session revocation).",
+        cluesUncovered: ["Prioritized local scan over credential revocation"],
       },
     },
   },
@@ -1018,21 +1079,23 @@ export const phishingChallenges = [
       },
       availableActions: [
         {
+          id: "act_sim_test_bonus",
+          label: "Click bonus link in Message C to inspect if it requires bank credentials",
+          evaluationKey: "sim_click_trap",
+        },
+        {
           id: "act_sim_report_c",
           label: "Isolate & Report Message C as Spear-Phishing Campaign to SOC",
-          variant: "primary",
           evaluationKey: "sim_report_phishing",
         },
         {
-          id: "act_sim_click_bonus",
-          label: "Click the Bonus Link in Message C to Claim INR 25,000",
-          variant: "danger",
-          evaluationKey: "sim_click_trap",
+          id: "act_sim_forward_team",
+          label: "Forward Message C to teammates to check if their bonus amounts match",
+          evaluationKey: "sim_forward_team",
         },
         {
           id: "act_sim_delete_all",
           label: "Delete All 3 Emails and Ignore Standup Notice",
-          variant: "secondary",
           evaluationKey: "sim_delete_all",
         },
       ],
@@ -1040,6 +1103,7 @@ export const phishingChallenges = [
     evaluation: {
       sim_report_phishing: { outcome: "correct", score: 100, xp: 200, lifeLost: false, key: "sim_report_phishing" },
       sim_click_trap: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "sim_click_trap" },
+      sim_forward_team: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "sim_forward_team" },
       sim_delete_all: { outcome: "partial", score: 40, xp: 50, lifeLost: false, key: "sim_delete_all" },
     },
     feedback: {
@@ -1063,6 +1127,14 @@ export const phishingChallenges = [
           "You fell for the festive bonus lure right before standup. The attacker captured your SSO password and corporate VPN access.",
         rule: "Cross-check unexpected financial lures with official internal channels before clicking.",
         cluesUncovered: ["Ignored warnings from colleague and SOC alert"],
+      },
+      sim_forward_team: {
+        title: "THREAT SPREAD INTERNALLY",
+        outcome: "wrong",
+        explanation:
+          "Forwarding malicious emails to coworkers spreads the attack surface internally.",
+        rule: "When you suspect phishing, report it directly to the SOC without forwarding to team channels.",
+        cluesUncovered: ["Amplified phishing link to teammates"],
       },
       sim_delete_all: {
         title: "SIMULATION INCOMPLETE",

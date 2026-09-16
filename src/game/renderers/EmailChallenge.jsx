@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
 import {
   Mail,
-  Shield,
-  ShieldAlert,
-  AlertTriangle,
   ExternalLink,
-  Trash2,
-  Flag,
   Search,
   Info,
   Clock,
-  CheckCircle2,
-  XCircle,
+  ArrowRight,
 } from 'lucide-react';
 
 export default function EmailChallenge({ challenge, session, onAction }) {
@@ -39,12 +33,12 @@ export default function EmailChallenge({ challenge, session, onAction }) {
   return (
     <div className="w-full max-w-4xl mx-auto space-y-4 text-left font-sans animate-in fade-in duration-300">
       
-      {/* Investigation Toolbar */}
+      {/* Tactical Investigation Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-[#0D1119] border border-[#273347] text-xs font-mono">
         <div className="flex items-center gap-2 text-[#AAB3C0]">
           <Search className="w-3.5 h-3.5 text-[#39C6E8]" />
           <span className="font-bold text-[#F4F6F8]">TACTICAL INVESTIGATION:</span>
-          <span className="text-[#6F7B8A]">Inspect anomalies before taking action</span>
+          <span className="text-[#6F7B8A]">Examine technical headers and destination addresses</span>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -53,6 +47,7 @@ export default function EmailChallenge({ challenge, session, onAction }) {
             return (
               <button
                 key={elem.id}
+                type="button"
                 onClick={() => handleInspect(elem)}
                 className={`px-2.5 py-1 rounded-lg border text-[11px] font-mono font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
                   isRevealed
@@ -69,18 +64,18 @@ export default function EmailChallenge({ challenge, session, onAction }) {
         </div>
       </div>
 
-      {/* Clue Discovery Banners (if any uncovered) */}
+      {/* Forensic Evidence Stream */}
       {Object.keys(revealedClues).length > 0 && (
         <div className="space-y-2">
           {Object.entries(revealedClues).map(([id, clue]) => (
             <div
               key={id}
-              className="p-3 rounded-xl bg-[#131925] border border-[#39C6E8]/40 text-xs font-mono text-[#F4F6F8] flex items-start gap-2.5 shadow-md"
+              className="p-3 rounded-xl bg-[#131925] border border-[#273347] text-xs font-mono text-[#F4F6F8] flex items-start gap-2.5 shadow-md"
             >
-              <ShieldAlert className="w-4 h-4 text-[#39C6E8] shrink-0 mt-0.5" />
+              <Info className="w-4 h-4 text-[#39C6E8] shrink-0 mt-0.5" />
               <div>
                 <span className="font-bold text-[#39C6E8] uppercase tracking-wider block text-[10px]">
-                  FORENSIC CLUE REVEALED
+                  FORENSIC EVIDENCE CAPTURED
                 </span>
                 <p className="text-xs text-[#AAB3C0] mt-0.5">{clue}</p>
               </div>
@@ -113,8 +108,8 @@ export default function EmailChallenge({ challenge, session, onAction }) {
               {content.subject}
             </h2>
             {content.urgency && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#FF7468]/15 border border-[#FF7468]/30 text-[#FF7468] text-[10px] font-mono font-bold uppercase self-start sm:self-auto">
-                <AlertTriangle className="w-3 h-3" />
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#192131] border border-[#273347] text-[#AAB3C0] text-[10px] font-mono font-medium self-start sm:self-auto">
+                <Clock className="w-3 h-3 text-[#6F7B8A]" />
                 {content.urgency}
               </span>
             )}
@@ -130,10 +125,11 @@ export default function EmailChallenge({ challenge, session, onAction }) {
                 <div className="flex items-center gap-2">
                   <span className="font-bold text-[#F4F6F8]">{content.sender?.name}</span>
                   <button
+                    type="button"
                     onClick={() => setInspectedSender(!inspectedSender)}
                     className="text-[10px] text-[#39C6E8] hover:underline cursor-pointer"
                   >
-                    {inspectedSender ? 'Hide Details' : 'Inspect Sender'}
+                    {inspectedSender ? 'Hide Headers' : 'Inspect Headers'}
                   </button>
                 </div>
                 <span className="text-[11px] text-[#AAB3C0] block">{content.sender?.email}</span>
@@ -159,11 +155,11 @@ export default function EmailChallenge({ challenge, session, onAction }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
                 <div className="flex items-center gap-1.5">
                   <span className="text-[#6F7B8A]">SPF Status:</span>
-                  <span className="text-[#FF7468] font-bold">{content.sender.spfResult}</span>
+                  <span className="text-[#F4F6F8] font-semibold">{content.sender.spfResult}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="text-[#6F7B8A]">Domain Age:</span>
-                  <span className="text-[#FFB84D] font-bold">{content.sender.domainAge}</span>
+                  <span className="text-[#F4F6F8] font-semibold">{content.sender.domainAge}</span>
                 </div>
               </div>
             </div>
@@ -183,15 +179,13 @@ export default function EmailChallenge({ challenge, session, onAction }) {
             <div key={link.id} className="pt-2">
               <div className="p-4 rounded-xl bg-[#0D1119] border border-[#273347] space-y-2">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <button
-                    onClick={() => setInspectedLink(!inspectedLink)}
-                    className="inline-flex items-center gap-2 text-xs font-mono font-bold text-[#39C6E8] hover:underline cursor-pointer"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" />
+                  <span className="inline-flex items-center gap-2 text-xs font-mono font-medium text-[#F4F6F8]">
+                    <ExternalLink className="w-3.5 h-3.5 text-[#39C6E8]" />
                     <span>{link.label}</span>
-                  </button>
+                  </span>
 
                   <button
+                    type="button"
                     onClick={() => setInspectedLink(!inspectedLink)}
                     className="text-[10px] font-mono text-[#AAB3C0] bg-[#192131] hover:text-[#F4F6F8] px-2.5 py-1 rounded border border-[#273347] self-start sm:self-auto cursor-pointer"
                   >
@@ -201,20 +195,15 @@ export default function EmailChallenge({ challenge, session, onAction }) {
 
                 {/* Expanded Link Inspection Target */}
                 {inspectedLink && (
-                  <div className="p-3 rounded-lg bg-[#080B12] border border-[#FF7468]/30 font-mono text-xs space-y-1.5">
+                  <div className="p-3 rounded-lg bg-[#080B12] border border-[#273347] font-mono text-xs space-y-1.5">
                     <div className="flex items-center justify-between text-[10px]">
                       <span className="text-[#6F7B8A]">Displayed Anchor:</span>
-                      <span className="text-[#73D6B1]">{link.displayUrl}</span>
+                      <span className="text-[#AAB3C0] font-mono">{link.displayUrl}</span>
                     </div>
                     <div className="flex items-center justify-between text-[10px] border-t border-[#1F2937] pt-1">
-                      <span className="text-[#FF7468] font-bold">Actual Target:</span>
-                      <span className="text-[#FF7468] font-bold break-all">{link.actualDestination}</span>
+                      <span className="text-[#6F7B8A]">Actual Destination:</span>
+                      <span className="text-[#F4F6F8] font-mono break-all">{link.actualDestination}</span>
                     </div>
-                    {link.clue && (
-                      <p className="text-[11px] text-[#AAB3C0] pt-1 italic">
-                        ⚠️ {link.clue}
-                      </p>
-                    )}
                   </div>
                 )}
               </div>
@@ -223,30 +212,30 @@ export default function EmailChallenge({ challenge, session, onAction }) {
 
         </div>
 
-        {/* Available Player Action Bar */}
-        <div className="p-5 bg-[#0D1119] border-t border-[#273347] flex flex-wrap items-center justify-end gap-3 font-mono">
-          {content.availableActions?.map((action) => {
-            const isDanger = action.variant === 'danger';
-            const isPrimary = action.variant === 'primary';
-            return (
+        {/* Available Player Action Bar - Strictly Neutral */}
+        <div className="p-5 bg-[#0D1119] border-t border-[#273347] space-y-3 font-mono">
+          <span className="text-[11px] font-bold text-[#F4F6F8] uppercase tracking-wider block text-left">
+            SELECT YOUR ACTION:
+          </span>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            {content.availableActions?.map((action, idx) => (
               <button
                 key={action.id}
+                type="button"
                 onClick={() => onAction(action)}
-                className={`px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer shadow-md ${
-                  isPrimary
-                    ? 'btn-cq-primary'
-                    : isDanger
-                    ? 'bg-[#FF7468]/15 hover:bg-[#FF7468]/25 text-[#FF7468] border border-[#FF7468]/40'
-                    : 'btn-cq-secondary'
-                }`}
+                className="w-full p-4 rounded-xl border border-[#273347] bg-[#131925] hover:bg-[#192131] hover:border-[#39C6E8] text-[#F4F6F8] text-xs font-bold transition-all flex items-center justify-between gap-3 cursor-pointer group shadow-sm text-left"
               >
-                {isPrimary && <Flag className="w-4 h-4" />}
-                {isDanger && <AlertTriangle className="w-4 h-4" />}
-                {!isPrimary && !isDanger && <Trash2 className="w-4 h-4" />}
-                <span>{action.label}</span>
+                <div className="flex items-center gap-3">
+                  <span className="w-6 h-6 rounded-md bg-[#0D1119] border border-[#273347] text-[#39C6E8] flex items-center justify-center text-xs font-mono font-bold shrink-0">
+                    0{idx + 1}
+                  </span>
+                  <span>{action.label}</span>
+                </div>
+                <ArrowRight className="w-4 h-4 text-[#6F7B8A] group-hover:text-[#39C6E8] transition-transform group-hover:translate-x-1 shrink-0" />
               </button>
-            );
-          })}
+            ))}
+          </div>
         </div>
 
       </div>
@@ -254,3 +243,4 @@ export default function EmailChallenge({ challenge, session, onAction }) {
     </div>
   );
 }
+

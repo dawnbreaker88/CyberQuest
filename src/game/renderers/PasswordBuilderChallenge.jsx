@@ -225,34 +225,29 @@ export default function PasswordBuilderChallenge({ challenge, session, onAction 
           </div>
         )}
 
-        {/* Available Decision Actions */}
-        <div className="p-5 bg-[#0D1119] rounded-xl border border-[#273347] flex flex-wrap items-center justify-between gap-3 font-mono">
-          <div className="text-xs text-[#6F7B8A]">
-            When ready, submit your choice or creation:
+        {/* Available Decision Actions - Strictly Neutral */}
+        <div className="p-5 bg-[#0D1119] rounded-xl border border-[#273347] space-y-3 font-mono">
+          <div className="text-[11px] font-bold text-[#F4F6F8] uppercase tracking-wider block text-left">
+            SUBMIT CREDENTIAL DECISION:
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            {content.availableActions?.map((action) => {
-              const isPrimary = action.variant === 'primary';
-              const isDanger = action.variant === 'danger';
-              return (
-                <button
-                  key={action.id}
-                  onClick={() => onAction({ ...action, payload: { password, strengthScore } })}
-                  className={`px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer shadow-md ${
-                    isPrimary
-                      ? 'btn-cq-primary'
-                      : isDanger
-                      ? 'bg-[#FF7468]/15 hover:bg-[#FF7468]/25 text-[#FF7468] border border-[#FF7468]/40'
-                      : 'btn-cq-secondary'
-                  }`}
-                >
-                  {isPrimary && <ShieldCheck className="w-4 h-4" />}
-                  {isDanger && <AlertTriangle className="w-4 h-4" />}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            {content.availableActions?.map((action, idx) => (
+              <button
+                key={action.id}
+                type="button"
+                onClick={() => onAction({ ...action, payload: { password, strengthScore } })}
+                className="w-full p-4 rounded-xl border border-[#273347] bg-[#131925] hover:bg-[#192131] hover:border-[#39C6E8] text-[#F4F6F8] text-xs font-bold transition-all flex items-center justify-between gap-3 cursor-pointer group shadow-sm text-left"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="w-6 h-6 rounded-md bg-[#0D1119] border border-[#273347] text-[#39C6E8] flex items-center justify-center text-xs font-mono font-bold shrink-0">
+                    0{idx + 1}
+                  </span>
                   <span>{action.label}</span>
-                </button>
-              );
-            })}
+                </div>
+                <ArrowRight className="w-4 h-4 text-[#6F7B8A] group-hover:text-[#39C6E8] transition-transform group-hover:translate-x-1 shrink-0" />
+              </button>
+            ))}
           </div>
         </div>
 

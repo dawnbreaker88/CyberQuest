@@ -2,18 +2,10 @@ import React, { useState } from 'react';
 import {
   QrCode,
   Scan,
-  Shield,
-  ShieldAlert,
-  AlertTriangle,
-  ExternalLink,
   Search,
   Info,
-  Layers,
   MapPin,
-  Sparkles,
   ArrowRight,
-  CheckCircle2,
-  Lock,
 } from 'lucide-react';
 
 export default function QrChallenge({ challenge, session, onAction }) {
@@ -50,7 +42,7 @@ export default function QrChallenge({ challenge, session, onAction }) {
   return (
     <div className="w-full max-w-4xl mx-auto space-y-4 text-left font-sans animate-in fade-in duration-300">
       
-      {/* Investigation Toolbar */}
+      {/* Tactical Investigation Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-[#0D1119] border border-[#273347] text-xs font-mono">
         <div className="flex items-center gap-2 text-[#AAB3C0]">
           <Search className="w-3.5 h-3.5 text-[#39C6E8]" />
@@ -64,6 +56,7 @@ export default function QrChallenge({ challenge, session, onAction }) {
             return (
               <button
                 key={elem.id}
+                type="button"
                 onClick={() => handleInspect(elem)}
                 className={`px-2.5 py-1 rounded-lg border text-[11px] font-mono font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
                   isRevealed
@@ -80,18 +73,18 @@ export default function QrChallenge({ challenge, session, onAction }) {
         </div>
       </div>
 
-      {/* Clues Uncovered */}
+      {/* Forensic Evidence Stream */}
       {Object.keys(revealedClues).length > 0 && (
         <div className="space-y-2">
           {Object.entries(revealedClues).map(([id, clue]) => (
             <div
               key={id}
-              className="p-3 rounded-xl bg-[#131925] border border-[#39C6E8]/40 text-xs font-mono text-[#F4F6F8] flex items-start gap-2.5 shadow-md"
+              className="p-3 rounded-xl bg-[#131925] border border-[#273347] text-xs font-mono text-[#F4F6F8] flex items-start gap-2.5 shadow-md"
             >
-              <ShieldAlert className="w-4 h-4 text-[#39C6E8] shrink-0 mt-0.5" />
+              <Info className="w-4 h-4 text-[#39C6E8] shrink-0 mt-0.5" />
               <div>
                 <span className="font-bold text-[#39C6E8] uppercase tracking-wider block text-[10px]">
-                  OPTICAL / NETWORK INTEL REVEALED
+                  OPTICAL / NETWORK INTEL CAPTURED
                 </span>
                 <p className="text-xs text-[#AAB3C0] mt-0.5">{clue}</p>
               </div>
@@ -106,7 +99,7 @@ export default function QrChallenge({ challenge, session, onAction }) {
         {/* Context Header */}
         <div className="px-6 py-3 bg-[#0D1119] border-b border-[#273347] flex items-center justify-between text-xs font-mono">
           <div className="flex items-center gap-2">
-            <MapPin className="w-3.5 h-3.5 text-[#FFB84D]" />
+            <MapPin className="w-3.5 h-3.5 text-[#39C6E8]" />
             <span className="font-bold text-[#F4F6F8]">SETTING:</span>
             <span className="text-[#AAB3C0]">{qrData.locationContext}</span>
           </div>
@@ -131,11 +124,6 @@ export default function QrChallenge({ challenge, session, onAction }) {
             <div className="mx-auto w-48 h-48 rounded-xl bg-[#192131] border-2 border-dashed border-[#3A4B68] p-4 flex flex-col items-center justify-center relative shadow-inner">
               <div className="w-28 h-28 bg-white p-2 rounded-lg shadow-md flex items-center justify-center relative group">
                 <QrCode className="w-full h-full text-black" />
-                {qrData.isOverlaySticker && (
-                  <div className="absolute -top-1 -right-1 bg-[#FF7468] text-[#080B12] text-[8px] font-mono font-black px-1 rounded shadow">
-                    STICKER OVERLAY
-                  </div>
-                )}
               </div>
               <span className="text-[10px] font-mono text-[#AAB3C0] mt-2 block">
                 {qrData.caption || 'Scan to pay / visit portal'}
@@ -143,14 +131,14 @@ export default function QrChallenge({ challenge, session, onAction }) {
             </div>
 
             <p className="text-xs text-[#AAB3C0] leading-relaxed text-left font-sans">
-              {content.physicalDescription || 'You spot this QR code posted on the counter. Look closely before pointing your camera.'}
+              {content.physicalDescription || 'You observe this code in the physical environment. Examine the surface and destination carefully before proceeding.'}
             </p>
           </div>
 
           {/* Scanner Viewfinder / Decoded HUD */}
           <div className="p-5 rounded-2xl bg-[#0A0E17] border border-[#273347] space-y-4">
             <div className="flex items-center justify-between font-mono text-xs">
-              <div className="flex items-center gap-1.5 text-[#73D6B1]">
+              <div className="flex items-center gap-1.5 text-[#39C6E8]">
                 <Scan className="w-4 h-4 animate-pulse" />
                 <span className="font-bold">OPTICAL DECODER</span>
               </div>
@@ -158,10 +146,10 @@ export default function QrChallenge({ challenge, session, onAction }) {
             </div>
 
             {/* Decoded URL HUD Card */}
-            <div className="p-4 rounded-xl bg-[#131925] border border-[#39C6E8]/40 space-y-2.5 font-mono text-xs">
+            <div className="p-4 rounded-xl bg-[#131925] border border-[#273347] space-y-2.5 font-mono text-xs">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] text-[#6F7B8A] uppercase font-bold">DECODED TARGET PAYLOAD:</span>
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#39C6E8]/10 text-[#39C6E8] font-bold">
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#192131] text-[#AAB3C0] font-bold border border-[#273347]">
                   {qrData.protocol.toUpperCase()}
                 </span>
               </div>
@@ -177,51 +165,44 @@ export default function QrChallenge({ challenge, session, onAction }) {
                   <span className="font-bold text-[#F4F6F8]">{qrData.destinationDomain}</span>
                 </div>
                 {qrData.redirectNotice && (
-                  <div className="flex items-center justify-between text-[#FFB84D]">
-                    <span>Redirect Notice:</span>
-                    <span className="font-bold">{qrData.redirectNotice}</span>
+                  <div className="flex items-center justify-between text-[#AAB3C0]">
+                    <span className="text-[#6F7B8A]">Redirect Notice:</span>
+                    <span className="font-semibold text-[#F4F6F8]">{qrData.redirectNotice}</span>
                   </div>
                 )}
               </div>
             </div>
 
             <div className="text-xs text-[#AAB3C0] font-sans">
-              {content.scannerTip || 'Verify the exact domain and whether this redirects to a third-party login or payment gateway.'}
+              {content.scannerTip || 'Verify the exact domain and whether this redirects to an unexpected login or payment gateway.'}
             </div>
           </div>
 
         </div>
 
-        {/* Action Decision Row */}
+        {/* Action Decision Row - Strictly Neutral */}
         <div className="p-5 bg-[#0D1119] border-t border-[#273347] space-y-3 font-mono">
-          <span className="text-[11px] font-bold text-[#F4F6F8] uppercase tracking-wider block">
-            HOW DO YOU PROCEED?
+          <span className="text-[11px] font-bold text-[#F4F6F8] uppercase tracking-wider block text-left">
+            SELECT YOUR ACTION:
           </span>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            {content.availableActions?.map((action, idx) => {
-              const isPrimary = action.variant === 'primary';
-              const isDanger = action.variant === 'danger';
-              return (
-                <button
-                  key={action.id}
-                  onClick={() => onAction(action)}
-                  className={`p-3.5 rounded-xl border text-left text-xs font-bold transition-all flex items-center justify-between gap-3 cursor-pointer group shadow-sm ${
-                    isPrimary
-                      ? 'bg-[#192131] border-[#73D6B1]/40 text-[#73D6B1] hover:bg-[#73D6B1]/10'
-                      : isDanger
-                      ? 'bg-[#192131] border-[#FF7468]/40 text-[#FF7468] hover:bg-[#FF7468]/10'
-                      : 'bg-[#131925] border-[#273347] text-[#F4F6F8] hover:border-[#39C6E8] hover:bg-[#192131]'
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-[11px] text-[#6F7B8A] font-mono">0{idx + 1}</span>
-                    <span>{action.label}</span>
-                  </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-[#6F7B8A] group-hover:text-[#F4F6F8] transition-transform group-hover:translate-x-0.5 shrink-0" />
-                </button>
-              );
-            })}
+            {content.availableActions?.map((action, idx) => (
+              <button
+                key={action.id}
+                type="button"
+                onClick={() => onAction(action)}
+                className="w-full p-4 rounded-xl border border-[#273347] bg-[#131925] hover:bg-[#192131] hover:border-[#39C6E8] text-[#F4F6F8] text-xs font-bold transition-all flex items-center justify-between gap-3 cursor-pointer group shadow-sm text-left"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="w-6 h-6 rounded-md bg-[#0D1119] border border-[#273347] text-[#39C6E8] flex items-center justify-center text-xs font-mono font-bold shrink-0">
+                    0{idx + 1}
+                  </span>
+                  <span>{action.label}</span>
+                </div>
+                <ArrowRight className="w-4 h-4 text-[#6F7B8A] group-hover:text-[#39C6E8] transition-transform group-hover:translate-x-1 shrink-0" />
+              </button>
+            ))}
           </div>
         </div>
 
@@ -229,3 +210,4 @@ export default function QrChallenge({ challenge, session, onAction }) {
     </div>
   );
 }
+

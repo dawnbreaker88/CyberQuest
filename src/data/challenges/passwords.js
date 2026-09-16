@@ -27,7 +27,6 @@ export const passwordChallenges = [
         {
           id: "act_test_weak",
           label: "Submit Tested Password",
-          variant: "primary",
           evaluationKey: "evaluate_entropy",
         },
       ],
@@ -72,7 +71,6 @@ export const passwordChallenges = [
         {
           id: "act_submit_personal",
           label: "Submit Entropy Test",
-          variant: "primary",
           evaluationKey: "evaluate_personal_data",
         },
       ],
@@ -116,7 +114,6 @@ export const passwordChallenges = [
         {
           id: "act_submit_patterns",
           label: "Analyze Modification Patterns",
-          variant: "primary",
           evaluationKey: "evaluate_patterns",
         },
       ],
@@ -152,22 +149,24 @@ export const passwordChallenges = [
         "You register on a new local food delivery discount portal 'QuickBite Deals'. The site asks you to set a password. You are tempted to use the same strong password you use for your primary Gmail and NetBanking accounts.",
       availableActions: [
         {
+          id: "act_slight_tweak",
+          label: "Use your master password with a site suffix like 'QB2026!' to make it different",
+          evaluationKey: "tweak_reuse",
+        },
+        {
           id: "act_generate_unique",
-          label: "Generate a Unique 20-Character Password Specific to QuickBite",
-          variant: "primary",
+          label: "Generate and store a completely unique 20-character password in your password manager",
           evaluationKey: "generate_unique",
         },
         {
-          id: "act_reuse_banking",
-          label: "Reuse Your Master NetBanking Password (It's 16 characters with symbols)",
-          variant: "danger",
-          evaluationKey: "reuse_banking",
+          id: "act_simple_pass",
+          label: "Use a simple memorable password since it is only a food delivery discount account",
+          evaluationKey: "simple_pass",
         },
         {
-          id: "act_slight_tweak",
-          label: "Use Your Standard Password with 'QB' Appended to the End",
-          variant: "secondary",
-          evaluationKey: "tweak_reuse",
+          id: "act_reuse_banking",
+          label: "Reuse your master NetBanking password because it is already 16 characters long with symbols",
+          evaluationKey: "reuse_banking",
         },
       ],
     },
@@ -175,6 +174,7 @@ export const passwordChallenges = [
       generate_unique: { outcome: "correct", score: 100, xp: 130, lifeLost: false, key: "generate_unique" },
       reuse_banking: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "reuse_banking" },
       tweak_reuse: { outcome: "partial", score: 40, xp: 50, lifeLost: false, key: "tweak_reuse" },
+      simple_pass: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "simple_pass" },
     },
     feedback: {
       generate_unique: {
@@ -201,6 +201,14 @@ export const passwordChallenges = [
         rule: "Use true randomness rather than appending website initials to a shared base.",
         cluesUncovered: ["Avoided direct reuse but used crackable pattern"],
       },
+      simple_pass: {
+        title: "Weak Account Compromise",
+        outcome: "wrong",
+        explanation:
+          "Even non-critical accounts hold personal phone numbers, delivery addresses, and payment tokens that fuel identity theft.",
+        rule: "Treat every registered account with high credential entropy.",
+        cluesUncovered: ["Underestimated data value of secondary service"],
+      },
     },
   },
 
@@ -217,22 +225,24 @@ export const passwordChallenges = [
         "You now manage 85 online accounts across work, banking, utilities, shopping, and social apps. What is the most resilient, secure strategy for credential management?",
       availableActions: [
         {
-          id: "act_use_manager",
-          label: "Use an Encrypted Password Manager with a Strong Master Passphrase + MFA",
-          variant: "primary",
-          evaluationKey: "use_manager",
-        },
-        {
           id: "act_excel_sheet",
-          label: "Keep an Unencrypted Excel / Notes File on Your Desktop",
-          variant: "danger",
+          label: "Store credentials in a password-protected spreadsheet in personal cloud storage",
           evaluationKey: "excel_sheet",
         },
         {
-          id: "act_memorize_all",
-          label: "Attempt to Memorize All 85 Unique Passwords in Your Head",
-          variant: "secondary",
+          id: "act_formula_memory",
+          label: "Create a mental formula based on website names to calculate passwords in your head",
           evaluationKey: "memorize_all",
+        },
+        {
+          id: "act_use_manager",
+          label: "Use a zero-knowledge encrypted password manager secured with a strong master passphrase & MFA",
+          evaluationKey: "use_manager",
+        },
+        {
+          id: "act_browser_only",
+          label: "Rely solely on browser auto-save without a master password or device passcode",
+          evaluationKey: "browser_only",
         },
       ],
     },
@@ -240,6 +250,7 @@ export const passwordChallenges = [
       use_manager: { outcome: "correct", score: 100, xp: 140, lifeLost: false, key: "use_manager" },
       excel_sheet: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "excel_sheet" },
       memorize_all: { outcome: "partial", score: 50, xp: 60, lifeLost: false, key: "memorize_all" },
+      browser_only: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "browser_only" },
     },
     feedback: {
       use_manager: {
@@ -254,17 +265,25 @@ export const passwordChallenges = [
         title: "Plaintext Credential Hazard!",
         outcome: "wrong",
         explanation:
-          "Any malware, browser extension, or unauthorized device access will instantly exfiltrate your entire digital identity in one file.",
-        rule: "Never store credentials in plaintext documents or unencrypted notes.",
+          "Spreadsheets are easily compromised by malware, info-stealers, or shared device access, exposing every account simultaneously.",
+        rule: "Never store credentials in standard document files.",
         cluesUncovered: ["Created single catastrophic point of failure"],
       },
       memorize_all: {
-        title: "Cognitive Overload (Partial)",
+        title: "Formulaic Vulnerability (Partial)",
         outcome: "partial",
         explanation:
-          "Humans cannot memorize 85 random 20-character strings without reverting to predictable patterns or password reuse.",
-        rule: "Outsource credential entropy to password managers.",
-        cluesUncovered: ["Recognized memory limitations"],
+          "Human mental formulas are reverse-engineered once an attacker discovers how two or three of your passwords relate to each other.",
+        rule: "True cryptographic randomness in a password manager outperforms mental formulas.",
+        cluesUncovered: ["Recognized pattern fatigue in mental formulas"],
+      },
+      browser_only: {
+        title: "Unprotected Local Vault",
+        outcome: "wrong",
+        explanation:
+          "Local browser credential storage without device encryption is the primary target of infostealer trojans (e.g. RedLine).",
+        rule: "Protect saved credentials with dedicated vault encryption and biometric/passphrase authentication.",
+        cluesUncovered: ["Left browser storage unprotected"],
       },
     },
   },
@@ -290,7 +309,6 @@ export const passwordChallenges = [
         {
           id: "act_submit_passphrase",
           label: "Evaluate Passphrase Resistance",
-          variant: "primary",
           evaluationKey: "evaluate_passphrase",
         },
       ],
@@ -356,16 +374,22 @@ export const passwordChallenges = [
           ],
           availableActions: [
             {
+              id: "act_approve_delayed",
+              label: "Approve the prompt assuming it is a delayed sync from an earlier login",
+              type: "advance",
+              nextStep: "step_2_approve",
+            },
+            {
               id: "act_deny_and_reset",
               label: "Click Deny & Report Fraud, Then Immediately Change Password",
               type: "advance",
               nextStep: "step_2_deny",
             },
             {
-              id: "act_approve_silence",
-              label: "Click Approve Just to Make the Phone Stop Buzzing",
+              id: "act_silence_phone",
+              label: "Turn on Do Not Disturb and ignore the notifications until morning",
               type: "advance",
-              nextStep: "step_2_approve",
+              nextStep: "step_2_silence",
             },
           ],
         },
@@ -386,7 +410,6 @@ export const passwordChallenges = [
             {
               id: "act_complete_mfa_defense",
               label: "Finalize Security Hardening",
-              variant: "primary",
               evaluationKey: "mfa_fatigue_defended",
             },
           ],
@@ -408,8 +431,28 @@ export const passwordChallenges = [
             {
               id: "act_fail_mfa",
               label: "Acknowledge Compromise",
-              variant: "danger",
               evaluationKey: "mfa_fatigue_failed",
+            },
+          ],
+        },
+        {
+          id: "step_2_silence",
+          stepNumber: 2,
+          contextTitle: "Unmitigated Password Exposure",
+          dialogue: [
+            {
+              sender: "Security Warning",
+              role: "system",
+              timestamp: "02:30 AM",
+              text: "The attacker holds your valid password and will continue trying alternative MFA bypasses.",
+            },
+          ],
+          inspectableClues: ["Password remains compromised on attacker command server."],
+          availableActions: [
+            {
+              id: "act_silence_ack",
+              label: "Acknowledge Incomplete Triage",
+              evaluationKey: "mfa_fatigue_silence",
             },
           ],
         },
@@ -418,6 +461,7 @@ export const passwordChallenges = [
     evaluation: {
       mfa_fatigue_defended: { outcome: "correct", score: 100, xp: 160, lifeLost: false, key: "mfa_fatigue_defended" },
       mfa_fatigue_failed: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "mfa_fatigue_failed" },
+      mfa_fatigue_silence: { outcome: "partial", score: 40, xp: 50, lifeLost: false, key: "mfa_fatigue_silence" },
     },
     feedback: {
       mfa_fatigue_defended: {
@@ -439,6 +483,14 @@ export const passwordChallenges = [
           "You approved a fraudulent prompt to silence your phone, granting the adversary complete access to your corporate network.",
         rule: "Never approve an authentication prompt you did not personally initiate.",
         cluesUncovered: ["Yielded to push fatigue pressure"],
+      },
+      mfa_fatigue_silence: {
+        title: "Threat Remained Active (Partial)",
+        outcome: "partial",
+        explanation:
+          "Silencing notifications avoided immediate approval, but left your compromised password active overnight.",
+        rule: "When unexpected MFA prompts appear, change your password immediately.",
+        cluesUncovered: ["Avoided approval but delayed credential reset"],
       },
     },
   },
@@ -473,14 +525,20 @@ export const passwordChallenges = [
           ],
           availableActions: [
             {
+              id: "act_rotate_only_breached",
+              label: "Change Password ONLY on QuickBite and Leave Other Accounts As-Is",
+              type: "advance",
+              nextStep: "step_2_partial_breach",
+            },
+            {
               id: "act_rotate_all_reused",
               label: "Change Password on QuickBite AND All Services Where that Password Was Reused",
               type: "advance",
               nextStep: "step_2_rotate_success",
             },
             {
-              id: "act_rotate_only_breached",
-              label: "Change Password ONLY on QuickBite and Leave Other Accounts As-Is",
+              id: "act_wait_breach_notice",
+              label: "Wait until other platforms send suspicious login alert notifications",
               type: "advance",
               nextStep: "step_2_partial_breach",
             },
@@ -503,7 +561,6 @@ export const passwordChallenges = [
             {
               id: "act_confirm_rotation",
               label: "Complete Triage Protocol",
-              variant: "primary",
               evaluationKey: "full_rotation_success",
             },
           ],
@@ -525,7 +582,6 @@ export const passwordChallenges = [
             {
               id: "act_acknowledge_stuffing",
               label: "Acknowledge Breach",
-              variant: "danger",
               evaluationKey: "partial_rotation_failure",
             },
           ],
@@ -572,22 +628,24 @@ export const passwordChallenges = [
         "You are setting up recovery options for your primary Google / Microsoft account. Many services offer 'Security Questions' (Mother's maiden name, childhood pet, first school) alongside offline 'Recovery Backup Codes' and FIDO2 Security Keys. Which configuration is most resilient against social engineering?",
       availableActions: [
         {
-          id: "act_fido_codes",
-          label: "Disable Security Questions; Use 16-Digit Offline Recovery Codes & Hardware Keys",
-          variant: "primary",
-          evaluationKey: "fido_recovery_codes",
-        },
-        {
           id: "act_use_security_questions",
-          label: "Use Standard Security Questions with Real Answers (e.g. your real high school in Delhi)",
-          variant: "danger",
+          label: "Configure standard security questions using real answers from your personal background",
           evaluationKey: "standard_security_questions",
         },
         {
           id: "act_fake_answers",
-          label: "Use Security Questions but Fill Them with Random 20-Character Passphrases",
-          variant: "secondary",
+          label: "Answer security questions with random 20-character passphrases stored in your password vault",
           evaluationKey: "fake_answer_passwords",
+        },
+        {
+          id: "act_fido_codes",
+          label: "Disable security questions; use single-use cryptographically generated recovery codes & hardware keys",
+          evaluationKey: "fido_recovery_codes",
+        },
+        {
+          id: "act_family_questions",
+          label: "Choose obscure questions about childhood memories known only to close relatives",
+          evaluationKey: "family_questions",
         },
       ],
     },
@@ -595,6 +653,7 @@ export const passwordChallenges = [
       fido_recovery_codes: { outcome: "correct", score: 100, xp: 180, lifeLost: false, key: "fido_recovery_codes" },
       fake_answer_passwords: { outcome: "partial", score: 60, xp: 80, lifeLost: false, key: "fake_answer_passwords" },
       standard_security_questions: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "standard_security_questions" },
+      family_questions: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "family_questions" },
     },
     feedback: {
       fido_recovery_codes: {
@@ -623,6 +682,14 @@ export const passwordChallenges = [
           "An attacker checked your LinkedIn/Facebook, found your high school and hometown, and reset your password through the recovery form.",
         rule: "Never use truthful answers to public knowledge security questions.",
         cluesUncovered: ["Surrendered recovery channel to OSINT lookup"],
+      },
+      family_questions: {
+        title: "Social Engineering Bypass",
+        outcome: "wrong",
+        explanation:
+          "Obscure questions are often guessable through spear-phishing or casual social interactions with family members.",
+        rule: "Cryptographic recovery tokens outperform human memory questions.",
+        cluesUncovered: ["Relied on vulnerable human knowledge factors"],
       },
     },
   },
@@ -765,22 +832,24 @@ export const passwordChallenges = [
       },
       availableActions: [
         {
-          id: "act_full_takeover_remedy",
-          label: "Revoke All Remote Sessions, Cancel Pending Recovery Email, Upgrade to 28-char Passphrase & Enable App MFA",
-          variant: "primary",
-          evaluationKey: "sim_full_remediation",
-        },
-        {
           id: "act_change_pass_only",
-          label: "Change Password Only (Leave Active Sessions and Recovery Email As-Is)",
-          variant: "secondary",
+          label: "Change master password only and let active sessions expire naturally",
           evaluationKey: "sim_pass_only",
         },
         {
-          id: "act_ignore_sim",
-          label: "Approve the New Recovery Email to Restore Access Later",
-          variant: "danger",
+          id: "act_full_takeover_remedy",
+          label: "Revoke remote sessions, cancel pending recovery email, set a 28-char passphrase & enable App MFA",
+          evaluationKey: "sim_full_remediation",
+        },
+        {
+          id: "act_approve_rogue",
+          label: "Approve pending recovery email so you have an alternate backup address",
           evaluationKey: "sim_approve_rogue_recovery",
+        },
+        {
+          id: "act_local_logout",
+          label: "Log out of your local session and restart your workstation",
+          evaluationKey: "sim_local_logout",
         },
       ],
     },
@@ -788,6 +857,7 @@ export const passwordChallenges = [
       sim_full_remediation: { outcome: "correct", score: 100, xp: 200, lifeLost: false, key: "sim_full_remediation" },
       sim_pass_only: { outcome: "partial", score: 50, xp: 70, lifeLost: false, key: "sim_pass_only" },
       sim_approve_rogue_recovery: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "sim_approve_rogue_recovery" },
+      sim_local_logout: { outcome: "wrong", score: 0, xp: 0, lifeLost: true, key: "sim_local_logout" },
     },
     feedback: {
       sim_full_remediation: {
@@ -818,6 +888,14 @@ export const passwordChallenges = [
           "You approved the attacker's recovery email! The attacker immediately changed the master credentials and locked you out permanently.",
         rule: "Never approve recovery modifications you did not personally trigger.",
         cluesUncovered: ["Handed permanent account ownership to adversary"],
+      },
+      sim_local_logout: {
+        title: "Misdirected Device Triage",
+        outcome: "wrong",
+        explanation:
+          "Logging out of your own computer does nothing to disrupt the attacker's active session in Frankfurt.",
+        rule: "Cloud account takeovers require cloud-side session revocation and credential reset.",
+        cluesUncovered: ["Failed to terminate attacker session on cloud"],
       },
     },
   },

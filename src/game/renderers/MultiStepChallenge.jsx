@@ -3,14 +3,9 @@ import {
   GitBranch,
   Phone,
   Mail,
-  User,
-  Shield,
-  ShieldAlert,
-  AlertTriangle,
   ArrowRight,
   Info,
   Clock,
-  CheckCircle2,
 } from 'lucide-react';
 
 export default function MultiStepChallenge({ challenge, session, onAction }) {
@@ -62,28 +57,19 @@ export default function MultiStepChallenge({ challenge, session, onAction }) {
           </span>
         </div>
 
-        {/* Dialogue & Incident Feed */}
+        {/* Dialogue & Incident Feed - Neutral */}
         <div className="p-6 space-y-4 bg-[#0F1420]">
           {currentStep.dialogue?.map((item, idx) => {
             const isPhone = item.role === 'phone_call';
-            const isSystem = item.role === 'system';
             return (
               <div
                 key={idx}
-                className={`p-4 rounded-2xl border space-y-2 transition-all ${
-                  isPhone
-                    ? 'bg-[#131925] border-[#73D6B1]/40'
-                    : isSystem
-                    ? 'bg-[#131925] border-[#FF7468]/40'
-                    : 'bg-[#131925] border-[#273347]'
-                }`}
+                className="p-4 rounded-2xl border border-[#273347] bg-[#131925] space-y-2 transition-all"
               >
                 <div className="flex items-center justify-between text-xs font-mono">
                   <div className="flex items-center gap-2">
                     {isPhone ? (
-                      <Phone className="w-3.5 h-3.5 text-[#73D6B1]" />
-                    ) : isSystem ? (
-                      <AlertTriangle className="w-3.5 h-3.5 text-[#FF7468]" />
+                      <Phone className="w-3.5 h-3.5 text-[#39C6E8]" />
                     ) : (
                       <Mail className="w-3.5 h-3.5 text-[#39C6E8]" />
                     )}
@@ -103,13 +89,13 @@ export default function MultiStepChallenge({ challenge, session, onAction }) {
         {/* Step Clues Section */}
         {currentStep.inspectableClues && currentStep.inspectableClues.length > 0 && (
           <div className="px-6 py-3 bg-[#080B12] border-t border-b border-[#273347] space-y-2 font-mono text-xs">
-            <span className="text-[10px] font-bold text-[#9D91E8] uppercase tracking-wider block">
+            <span className="text-[10px] font-bold text-[#39C6E8] uppercase tracking-wider block">
               SITUATIONAL INTELLIGENCE:
             </span>
             <div className="space-y-1.5">
               {currentStep.inspectableClues.map((clue, idx) => (
                 <div key={idx} className="flex items-start gap-2 text-[#AAB3C0] text-xs">
-                  <span className="text-[#9D91E8] font-bold">•</span>
+                  <span className="text-[#39C6E8] font-bold">•</span>
                   <span>{clue}</span>
                 </div>
               ))}
@@ -117,46 +103,29 @@ export default function MultiStepChallenge({ challenge, session, onAction }) {
           </div>
         )}
 
-        {/* Decision Action Buttons */}
+        {/* Decision Action Buttons - Strictly Neutral */}
         <div className="p-6 bg-[#0D1119] space-y-3 font-mono">
           <span className="text-[11px] font-bold text-[#F4F6F8] uppercase tracking-wider block text-left">
             CHOOSE YOUR NEXT ACTION:
           </span>
 
           <div className="grid grid-cols-1 gap-2.5">
-            {currentStep.availableActions?.map((action) => {
-              const isDanger = action.variant === 'danger';
-              const isPrimary = action.variant === 'primary';
-              return (
-                <button
-                  key={action.id}
-                  onClick={() => onAction(action)}
-                  className={`w-full p-4 rounded-xl border text-xs font-bold text-left transition-all flex items-center justify-between gap-3 cursor-pointer shadow-md ${
-                    isPrimary
-                      ? 'bg-[#192131] border-[#39C6E8] text-[#F4F6F8] hover:bg-[#202A38]'
-                      : isDanger
-                      ? 'bg-[#FF7468]/10 hover:bg-[#FF7468]/20 text-[#FF7468] border-[#FF7468]/30'
-                      : 'bg-[#131925] border-[#273347] text-[#AAB3C0] hover:text-[#F4F6F8] hover:border-[#3A4B68]'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-6 h-6 rounded-lg flex items-center justify-center text-xs font-mono ${
-                        isPrimary
-                          ? 'bg-[#39C6E8]/20 text-[#39C6E8]'
-                          : isDanger
-                          ? 'bg-[#FF7468]/20 text-[#FF7468]'
-                          : 'bg-[#192131] text-[#AAB3C0]'
-                      }`}
-                    >
-                      →
-                    </div>
-                    <span>{action.label}</span>
-                  </div>
-                  <ArrowRight className="w-4 h-4 shrink-0 opacity-60" />
-                </button>
-              );
-            })}
+            {currentStep.availableActions?.map((action, idx) => (
+              <button
+                key={action.id}
+                type="button"
+                onClick={() => onAction(action)}
+                className="w-full p-4 rounded-xl border border-[#273347] bg-[#131925] hover:bg-[#192131] hover:border-[#39C6E8] text-[#F4F6F8] text-xs font-bold transition-all flex items-center justify-between gap-3 cursor-pointer group shadow-sm text-left"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="w-6 h-6 rounded-md bg-[#0D1119] border border-[#273347] text-[#39C6E8] flex items-center justify-center text-xs font-mono font-bold shrink-0">
+                    0{idx + 1}
+                  </span>
+                  <span>{action.label}</span>
+                </div>
+                <ArrowRight className="w-4 h-4 text-[#6F7B8A] group-hover:text-[#39C6E8] transition-transform group-hover:translate-x-1 shrink-0" />
+              </button>
+            ))}
           </div>
         </div>
 
@@ -165,3 +134,4 @@ export default function MultiStepChallenge({ challenge, session, onAction }) {
     </div>
   );
 }
+
